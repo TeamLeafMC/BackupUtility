@@ -1,0 +1,3 @@
+[submodule "Server-Sync-Core"]
+	path = Server-Sync-Core
+	url = https://github.com/theAspenGrove/Server-Sync-Core.git
