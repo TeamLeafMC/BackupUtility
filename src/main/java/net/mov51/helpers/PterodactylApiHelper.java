@@ -9,6 +9,15 @@ import static net.mov51.helpers.yamlHelper.*;
 
 public class PterodactylApiHelper {
 
+    /*
+    todo Verify global core config and passed cycle configs
+     -Verify panel domain resolution
+     -verify that api key can retrieve a server list
+      -might be able to do in tandem with the one below, but only if there are separate response codes
+     -get server to verify that the requested server UUID is accessible by the apikey provided
+      -https://docs.panel.gg/#get-a-specific-server
+    */
+
     private static boolean sendCommandRequest(String command){
 
         try {
@@ -36,6 +45,7 @@ public class PterodactylApiHelper {
 
             if(http.getResponseCode() == 204){
                 http.disconnect();
+                //todo check for code 412 when server isn't running
                 return true;
             }else{
                 //todo change to error logger

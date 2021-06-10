@@ -2,9 +2,6 @@ package net.mov51.helpers;
 
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,7 +21,15 @@ public class configHelper {
             if(defaultConfig != null){
                 if(userConfigFile.toFile().exists()){
                     System.out.println("Core Config file exists.");
-                    System.out.println("Checking Core Config for invalid entries...");
+                    System.out.println("Checking Core Config for invalid/default entries...");
+                    /* The active coreConfig.yml should *only* have non-default entries.
+                    It will only be used for things that are essential for the program
+                    to work such as the api token and server URI.
+
+                    Eventually individual backup cycles will have their
+                    own core section that can define those independently, but there
+                    will still need to be at least some non-default values in the
+                    global configuration.  */
                     try {
                         Yaml yaml = new Yaml();
                         Map<String,Object> defaultConfigMap = yaml.load(defaultConfig);
