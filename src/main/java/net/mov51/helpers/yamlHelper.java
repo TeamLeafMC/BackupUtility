@@ -7,11 +7,13 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Map;
 
+import static net.mov51.helpers.configHelper.userConfigFile;
+
 public class yamlHelper {
     //loads config file into map. Can only be accessed via getters
     private static Map<String,Object> getConfig(){
         try {
-            InputStream inputStream = new FileInputStream(new File("config.yml"));
+            InputStream inputStream = new FileInputStream(new File(String.valueOf(userConfigFile)));
             Yaml yaml = new Yaml();
             return yaml.load(inputStream);
 
