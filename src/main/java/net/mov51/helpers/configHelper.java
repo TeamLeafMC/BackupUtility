@@ -34,6 +34,7 @@ public class configHelper {
                                 //todo change to error logger
                                 System.out.println(key + " is the default Core Config value!");
                                 System.out.println("Please change the coreConfig.yml with your pane information!");
+                                //todo add link to wiki page
                                 System.exit(1);
                             }else{
                                 //todo log as info
@@ -46,9 +47,6 @@ public class configHelper {
                     }
                     System.out.println("Core Config exists and contains non-default entries");
 
-
-
-                    System.out.println("\n--End Core Config--");
                 }else{
                     //todo change to error logger
                     System.out.println("Core Config file does not exist. Creating Default Core Config file.");

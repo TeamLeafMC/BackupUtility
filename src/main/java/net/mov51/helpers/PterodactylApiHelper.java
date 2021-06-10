@@ -54,11 +54,15 @@ public class PterodactylApiHelper {
 
     public static boolean sendCommand(String command){
         //change to accept separate named UUIDS
+        //todo log as info
         System.out.println("Sending command \"" + command + "\" to server with UUID " + getUUID());
         if(!sendCommandRequest(command)){
             //todo change to error logger
             System.out.println("Command \"" + command + "\" could not be sent to server with UUID " + getUUID());
             return false;
+        }else{
+            //todo log as info
+            System.out.println("Command \"" + command + "\" was successfully sent server with UUID " + getUUID());
         }
         return true;
     }
