@@ -32,9 +32,12 @@ public class configHelper {
                         defaultConfigMap.forEach((key, value) -> {
                             if(value.equals(getFromKey(key))){
                                 //todo change to error logger
-                                System.out.println(key + " is the default config value!");
+                                System.out.println(key + " is the default Core Config value!");
                                 System.out.println("Please change the coreConfig.yml with your pane information!");
                                 System.exit(1);
+                            }else{
+                                //todo log as info
+                                System.out.println("-- Core Config value " + key + " exists and has been changed from the default value.");
                             }
                         });
                     } catch (Exception e) {
