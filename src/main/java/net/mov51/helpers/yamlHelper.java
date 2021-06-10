@@ -25,7 +25,7 @@ public class yamlHelper {
         return null;
     }
 
-    public static String getKey(){
+    public static String getApiKey(){
         return getConfig().get("key").toString();
     }
 
@@ -35,6 +35,10 @@ public class yamlHelper {
 
     public static String getPanelURL(){
         return getConfig().get("panelURL").toString();
+    }
+
+    public static String getFromKey(String key){
+        return getConfig().get(key).toString();
     }
 
 }

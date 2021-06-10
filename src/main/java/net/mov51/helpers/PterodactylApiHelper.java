@@ -24,7 +24,7 @@ public class PterodactylApiHelper {
             http.setRequestProperty("Accept", "application/vnd.wisp.v1+json");
 
             //use provided key to authorize
-            http.setRequestProperty("Authorization", "Bearer " + getKey());
+            http.setRequestProperty("Authorization", "Bearer " + getApiKey());
 
             //send command
             String data = "{\"command\": \"" + command + "\"}";
