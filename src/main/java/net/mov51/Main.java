@@ -9,7 +9,7 @@ public class Main {
     public static void main(String[] args){
 
         //If config is invalid or needs to be recreated, exit and let the config helper handle the error code
-        if (!configHelper.initiateConfig()){
+        if (!configHelper.initiateCoreConfig()){
             System.exit(1);
         }
 
