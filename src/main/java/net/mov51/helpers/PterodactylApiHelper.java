@@ -9,7 +9,7 @@ import static net.mov51.helpers.yamlHelper.*;
 
 public class PterodactylApiHelper {
 
-    public static void sendCommand(String command){
+    private static boolean sendCommandRequest(String command){
 
         try {
             //build API url
@@ -34,12 +34,32 @@ public class PterodactylApiHelper {
             OutputStream stream = http.getOutputStream();
             stream.write(out);
 
-            System.out.println(http.getResponseCode() + " " + http.getResponseMessage());
-            http.disconnect();
+            if(http.getResponseCode() == 204){
+                http.disconnect();
+                return true;
+            }else{
+                //todo change to error logger
+                System.out.println(http.getResponseCode());
+                System.out.println(http.getResponseMessage());
+                http.disconnect();
+                return false;
+            }
         } catch (Exception e) {
             //todo change to error logger
             e.printStackTrace();
+            return false;
         }
 
+    }
+
+    public static boolean sendCommand(String command){
+        //change to accept separate named UUIDS
+        System.out.println("Sending command \"" + command + "\" to server with UUID " + getUUID());
+        if(!sendCommandRequest(command)){
+            //todo change to error logger
+            System.out.println("Command \"" + command + "\" could not be sent to server with UUID " + getUUID());
+            return false;
+        }
+        return true;
     }
 }

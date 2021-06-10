@@ -9,11 +9,12 @@ import java.nio.file.Paths;
 
 public class configHelper {
     public static final Path userConfigFile = Paths.get("coreConfig.yml");
+    public static final String defaultConfigFile = "/defaultConfig.yml";
 
 
     public static boolean initiateCoreConfig(){
 
-        try (InputStream defaultConfig = configHelper.class.getResourceAsStream("/defaultConfig.yml")) {
+        try (InputStream defaultConfig = configHelper.class.getResourceAsStream(defaultConfigFile)) {
             if(defaultConfig != null){
                 if(userConfigFile.toFile().exists()){
                     System.out.println("Core Config file exists.");
