@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Objects;
 
+import static net.mov51.helpers.PterodactylApiHelper.*;
+
 
 public class yamlHelper {
     //loads config file into map. Can only be accessed via getters

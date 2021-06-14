@@ -21,7 +21,7 @@ public class configHelper {
     public static final String defaultLogConfigFile = "/defaultLogConfig.yml";
 
 
-    public static boolean initiateConfig(String internalConfig, String outputConfig, Boolean validate, String name){
+    public static boolean initiateConfig(String internalConfig, String outputConfig, boolean Validate, String name){
 
         Path externalConfig = Paths.get(outputConfig);
 
@@ -34,17 +34,16 @@ public class configHelper {
         try (InputStream defaultConfig = configHelper.class.getResourceAsStream(internalConfig)) {
             if(defaultConfig != null){
                 if(externalConfig.toFile().exists()){
-                    System.out.println("Core Config file exists.");
-                    if(validate){
+                    if(Validate){
                         System.out.println("Checking Core Config for invalid/default entries...");
-                            /* The active coreConfig.yml should *only* have non-default entries.
-                            It will only be used for things that are essential for the program
-                            to work such as the api token and server URI.
+                    /* The active coreConfig.yml should *only* have non-default entries.
+                    It will only be used for things that are essential for the program
+                    to work such as the api token and server URI.
 
-                            Eventually individual backup cycles will have their
-                            own core section that can define those independently, but there
-                            will still need to be at least some non-default values in the
-                            global configuration.  */
+                    Eventually individual backup cycles will have their
+                    own core section that can define those independently, but there
+                    will still need to be at least some non-default values in the
+                    global configuration.  */
                         try {
                             Yaml yaml = new Yaml();
                             Map<String,Object> defaultConfigMap = yaml.load(defaultConfig);
@@ -66,7 +65,10 @@ public class configHelper {
                             e.printStackTrace();
                         }
                         System.out.println(name + "exists and contains non-default entries");
+                    }else{
+                        System.out.println("Core Config file exists.");
                     }
+
                 }else{
                     //todo change to error logger
                     System.out.println(name + " file does not exist. Creating Default " + name + "file.");
