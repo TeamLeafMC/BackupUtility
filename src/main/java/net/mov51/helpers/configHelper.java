@@ -11,15 +11,29 @@ import java.util.Map;
 import static net.mov51.helpers.yamlHelper.getFromKey;
 
 public class configHelper {
-    public static final Path userConfigFile = Paths.get("coreConfig.yml");
-    public static final String defaultConfigFile = "/defaultConfig.yml";
+    public static final String userConfigFolder = "Config/";
+    public static final Path userConfigPath= Paths.get(userConfigFolder);
+
+    public static final String userCoreConfigFile = userConfigFolder + "coreConfig.yml";
+    public static final String defaultCoreConfigFile = "/defaultConfig.yml";
+
+    public static final String userLogConfigFile = userConfigFolder + "logConfig.yml";
+    public static final String defaultLogConfigFile = "/defaultLogConfig.yml";
 
 
-    public static boolean initiateCoreConfig(){
+    public static boolean initiateConfig(String internalConfig, String outputConfig, String name){
 
-        try (InputStream defaultConfig = configHelper.class.getResourceAsStream(defaultConfigFile)) {
+        Path externalConfig = Paths.get(outputConfig);
+
+
+        if(!userConfigPath.toFile().isDirectory()){
+            if(userConfigPath.toFile().mkdir())
+                System.out.println("config folder created!");
+        }
+
+        try (InputStream defaultConfig = configHelper.class.getResourceAsStream(internalConfig)) {
             if(defaultConfig != null){
-                if(userConfigFile.toFile().exists()){
+                if(externalConfig.toFile().exists()){
                     System.out.println("Core Config file exists.");
                     System.out.println("Checking Core Config for invalid/default entries...");
                     /* The active coreConfig.yml should *only* have non-default entries.
@@ -35,45 +49,45 @@ public class configHelper {
                         Map<String,Object> defaultConfigMap = yaml.load(defaultConfig);
 
                         defaultConfigMap.forEach((key, value) -> {
-                            if(value.equals(getFromKey(key))){
+                            if(value.equals(getFromKey(outputConfig,key))){
                                 //todo change to error logger
-                                System.out.println(key + " is the default Core Config value!");
-                                System.out.println("Please change the coreConfig.yml with your pane information!");
+                                System.out.println(key + " is the default Config value for " + name + "!");
+                                System.out.println("Please update the " + name + " file with your information!");
                                 //todo add link to wiki page
                                 System.exit(1);
                             }else{
                                 //todo log as info
-                                System.out.println("-- Core Config value " + key + " exists and has been changed from the default value.");
+                                System.out.println("-- Config value " + key + " exists in " + name + " and has been changed from the default value.");
                             }
                         });
                     } catch (Exception e) {
                         //todo change to error logger
                         e.printStackTrace();
                     }
-                    System.out.println("Core Config exists and contains non-default entries");
+                    System.out.println(name + "exists and contains non-default entries");
 
                 }else{
                     //todo change to error logger
-                    System.out.println("Core Config file does not exist. Creating Default Core Config file.");
-                    Files.copy(defaultConfig, userConfigFile);
-                    System.out.println("Core Config file created :D");
+                    System.out.println(name + " file does not exist. Creating Default " + name + "file.");
+                    Files.copy(defaultConfig, externalConfig);
+                    System.out.println(name + "file created :D");
                     //todo change to error logger
                     System.out.println("Please update it with your values!");
                     //todo add link to wiki page
-                    return false;
+                    return true;
                 }
-                return true;
+                return false;
             }else{
                 //todo change to error logger
-                System.out.println("Default Core Config was null...");
-                return false;
+                System.out.println("Default " + name + " was null...");
+                return true;
             }
 
         }catch(Exception e){
             //todo change to error logger
-            System.out.println("Core Config file could not be tested!");
+            System.out.println(name + " file could not be tested!");
             e.printStackTrace();
-            return false;
+            return true;
         }
     }
 }

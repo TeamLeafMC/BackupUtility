@@ -7,13 +7,15 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Objects;
 
-import static net.mov51.helpers.configHelper.userConfigFile;
+import static net.mov51.helpers.PterodactylApiHelper.*;
+import static net.mov51.helpers.configHelper.userCoreConfigFile;
+
 
 public class yamlHelper {
     //loads config file into map. Can only be accessed via getters
-    private static Map<String,Object> getConfig(){
+    private static Map<String,Object> getValue(String Config){
         try {
-            InputStream inputStream = new FileInputStream(String.valueOf(userConfigFile));
+            InputStream inputStream = new FileInputStream(String.valueOf(Config));
             Yaml yaml = new Yaml();
             return yaml.load(inputStream);
 
@@ -25,21 +27,23 @@ public class yamlHelper {
         return null;
     }
 
-    public static String getApiKey(){
-        return Objects.requireNonNull(getConfig()).get("key").toString();
+    public static String getFromKey(String pathToConfig,String key){
+        return Objects.requireNonNull(getValue(pathToConfig)).get(key).toString();
     }
 
-    public static String getUUID(){
-        return Objects.requireNonNull(getConfig()).get("serverUUID").toString();
-    }
+    //---Pre-made getters---
 
     public static String getPanelURL(){
-        return Objects.requireNonNull(getConfig()).get("panelURL").toString();
+        return Objects.requireNonNull(getValue(userCoreConfigFile)).get(keyDefaultPanelURL).toString();
     }
 
-    public static String getFromKey(String key){
+    public static String getAPIkey(){
+        return Objects.requireNonNull(getValue(userCoreConfigFile)).get(keyDefaultAPIkey).toString();
+    }
 
-        return Objects.requireNonNull(getConfig()).get(key).toString();
+    public static String getServerUUID(){
+        return Objects.requireNonNull(getValue(userCoreConfigFile)).get(keyDefaultSeverUUID).toString();
+
     }
 
 }

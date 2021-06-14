@@ -18,11 +18,15 @@ public class PterodactylApiHelper {
       -https://docs.panel.gg/#get-a-specific-server
     */
 
+    public static final String keyDefaultPanelURL = "panelURL";
+    public static final String keyDefaultSeverUUID = "serverUUID";
+    public static final String keyDefaultAPIkey = "key";
+
     private static boolean sendCommandRequest(String command){
 
         try {
             //build API url
-            URL url = new URL(getPanelURL() + "/api/client/servers/"+ getUUID() + "/command");
+            URL url = new URL(getPanelURL() + "/api/client/servers/"+ getServerUUID() + "/command");
 
             HttpURLConnection http = (HttpURLConnection)url.openConnection();
 
@@ -33,7 +37,7 @@ public class PterodactylApiHelper {
             http.setRequestProperty("Accept", "application/vnd.wisp.v1+json");
 
             //use provided key to authorize
-            http.setRequestProperty("Authorization", "Bearer " + getApiKey());
+            http.setRequestProperty("Authorization", "Bearer " + getAPIkey());
 
             //send command
             String data = "{\"command\": \"" + command + "\"}";
@@ -65,14 +69,14 @@ public class PterodactylApiHelper {
     public static boolean sendCommand(String command){
         //change to accept separate named UUIDS
         //todo log as info
-        System.out.println("Sending command \"" + command + "\" to server with UUID " + getUUID());
+        System.out.println("Sending command \"" + command + "\" to server with UUID " + getServerUUID());
         if(!sendCommandRequest(command)){
             //todo change to error logger
-            System.out.println("Command \"" + command + "\" could not be sent to server with UUID " + getUUID());
+            System.out.println("Command \"" + command + "\" could not be sent to server with UUID " + getServerUUID());
             return false;
         }else{
             //todo log as info
-            System.out.println("Command \"" + command + "\" was successfully sent server with UUID " + getUUID());
+            System.out.println("Command \"" + command + "\" was successfully sent server with UUID " + getServerUUID());
         }
         return true;
     }
