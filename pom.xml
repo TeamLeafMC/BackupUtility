@@ -34,6 +34,7 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
@@ -41,6 +42,11 @@
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <version>1.29</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.fracpete</groupId>
+            <artifactId>rsync4j-all</artifactId>
+            <version>3.2.3-3</version>
         </dependency>
     </dependencies>
     
