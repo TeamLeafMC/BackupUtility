@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static net.mov51.helpers.config.getters.*;
+import static net.mov51.helpers.dateHelper.getFileSafeDate;
 
 public class execute {
     public static void sync(String source, String destination,Boolean recursive){
@@ -21,11 +22,6 @@ public class execute {
                 System.out.println("config folder created!");
         }
 
-        Date date = new Date() ;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss") ;
-
-        String sDate = dateFormat.format(date);
-
         RSync rsync = new RSync()
         .source(source + "/")
         .destination(destination)
@@ -33,7 +29,7 @@ public class execute {
         .verbose(true)
         .wholeFile(true)
         .archive(true)
-        .logFile(getLogFolder() + "/" + getSyncFileName() + "__" + sDate + ".txt");
+        .logFile(getLogFolder() + "/" + getSyncFileName() +  getFileSafeDate() + ".txt");
 
         try {
             ConsoleOutputProcessOutput output = new ConsoleOutputProcessOutput();
