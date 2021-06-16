@@ -2,6 +2,7 @@ package net.mov51.helpers.config;
 
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,29 +12,27 @@ import java.util.Map;
 import static net.mov51.helpers.config.yamlHelper.getFromKey;
 
 public class configHelper {
-    public static final String userConfigFolder = "Config/";
-    public static final Path userConfigPath= Paths.get(userConfigFolder);
 
-    public static final String userCoreConfigFile = userConfigFolder + "coreConfig.yml";
+    private static final Path userConfigFolder = Paths.get("Config" + File.separator);
+
+    public static final Path userCoreConfigPath = Paths.get(userConfigFolder+  File.separator +"coreConfig.yml");
+    public static final Path userCoreLogConfigFile = Paths.get(userConfigFolder+ File.separator + "logConfig.yml");
+
     public static final String defaultCoreConfigFile = "/defaultConfig.yml";
-
-    public static final String userLogConfigFile = userConfigFolder + "logConfig.yml";
-    public static final String defaultLogConfigFile = "/defaultLogConfig.yml";
+    public static final String defaultLogConfigFile = "/defaultBackupConfig.yml";
 
 
-    public static boolean initiateConfig(String internalConfig, String outputConfig, boolean Validate, String name){
-
-        Path externalConfig = Paths.get(outputConfig);
+    public static boolean initiateConfig(String internalConfig, Path outputConfig, boolean Validate, String name){
 
 
-        if(!userConfigPath.toFile().isDirectory()){
-            if(userConfigPath.toFile().mkdir())
+        if(!userConfigFolder.toFile().isDirectory()){
+            if(userCoreConfigPath.toFile().mkdir())
                 System.out.println("config folder created!");
         }
 
         try (InputStream defaultConfig = configHelper.class.getResourceAsStream(internalConfig)) {
             if(defaultConfig != null){
-                if(externalConfig.toFile().exists()){
+                if(outputConfig.toFile().exists()){
                     if(Validate){
                         System.out.println("Checking Core Config for invalid/default entries...");
                     /* The active coreConfig.yml should *only* have non-default entries.
@@ -72,7 +71,7 @@ public class configHelper {
                 }else{
                     //todo change to error logger
                     System.out.println(name + " file does not exist. Creating Default " + name + "file.");
-                    Files.copy(defaultConfig, externalConfig);
+                    Files.copy(defaultConfig, outputConfig);
                     System.out.println(name + "file created :D");
                     //todo change to error logger
                     System.out.println("Please update it with your values!");

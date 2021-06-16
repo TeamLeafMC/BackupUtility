@@ -4,15 +4,17 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.Objects;
 
 import static net.mov51.helpers.PterodactylApiHelper.*;
+import static net.mov51.helpers.config.configHelper.*;
 
 
 public class yamlHelper {
     //loads config file into map. Can only be accessed via getters
-    protected static Map<String,Object> getValue(String Config){
+    private static Map<String,Object> getValue(Path Config){
         try {
             InputStream inputStream = new FileInputStream(String.valueOf(Config));
             Yaml yaml = new Yaml();
@@ -26,8 +28,20 @@ public class yamlHelper {
         return null;
     }
 
-    public static String getFromKey(String pathToConfig,String key){
+    protected static String getFromKey(Path pathToConfig,String key){
         return Objects.requireNonNull(getValue(pathToConfig)).get(key).toString();
+    }
+
+    protected static String getDefaultFromKey(String key){
+        return Objects.requireNonNull(getValue(userCoreConfigPath)).get(key).toString();
+    }
+
+    protected static String getCoreFromKey(String key){
+        return Objects.requireNonNull(getValue(userCoreConfigPath)).get(key).toString();
+    }
+
+    protected static String getLogCoreFromKey(String key){
+        return Objects.requireNonNull(getValue(userCoreLogConfigFile)).get(key).toString();
     }
 
 }

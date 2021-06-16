@@ -1,11 +1,12 @@
 package net.mov51.helpers.config;
 
+import java.nio.file.Path;
 import java.util.Objects;
 
 import static net.mov51.helpers.PterodactylApiHelper.*;
-import static net.mov51.helpers.config.getters.keyDefaultLogFolder;
-import static net.mov51.helpers.config.getters.keyDefaultSyncLogName;
-import static net.mov51.helpers.config.yamlHelper.getValue;
+import static net.mov51.helpers.config.coreGetters.keyDefaultLogFolder;
+import static net.mov51.helpers.config.coreGetters.keyDefaultSyncLogName;
+import static net.mov51.helpers.config.yamlHelper.getFromKey;
 
 public class backupGetters {
 
@@ -19,53 +20,53 @@ public class backupGetters {
 
     //--Pre-made getters with path options--
 
-    public static String getPanelURL(String pathToConfig){
-        return Objects.requireNonNull(getValue(pathToConfig + "-core.yml")).get(keyDefaultPanelURL).toString();
+    public static String getPanelURL(Path pathToConfig){
+        return Objects.requireNonNull(getFromKey(pathToConfig,keyDefaultPanelURL));
     }
 
-    public static String getServerUUID(String pathToConfig){
-        return Objects.requireNonNull(getValue(pathToConfig + "-core.yml")).get(keyDefaultSeverUUID).toString();
+    public static String getServerUUID(Path pathToConfig){
+        return Objects.requireNonNull(getFromKey(pathToConfig,keyDefaultSeverUUID));
 
     }
 
-    public static String getAPIkey(String pathToConfig){
-        return Objects.requireNonNull(getValue(pathToConfig + "-core.yml")).get(keyDefaultAPIkey).toString();
+    public static String getAPIkey(Path pathToConfig){
+        return Objects.requireNonNull(getFromKey(pathToConfig,keyDefaultAPIkey));
     }
 
-    public static String getLogFolder(String pathToConfig){
-        return Objects.requireNonNull(getValue(pathToConfig + "-options.yml")).get(keyDefaultLogFolder).toString();
+    public static String getLogFolder(Path pathToConfig){
+        return Objects.requireNonNull(getFromKey(pathToConfig,keyDefaultLogFolder));
     }
 
-    public static String getSyncFileName(String pathToConfig){
-        return Objects.requireNonNull(getValue(pathToConfig + "-options.yml")).get(keyDefaultSyncLogName).toString();
+    public static String getSyncFileName(Path pathToConfig){
+        return Objects.requireNonNull(getFromKey(pathToConfig,keyDefaultSyncLogName));
     }
 
-    public static String getStartCommand(String pathToConfig){
-        return Objects.requireNonNull(getValue(pathToConfig + "-options.yml")).get(keyDefaultStartCommand).toString();
+    public static String getStartCommand(Path pathToConfig){
+        return Objects.requireNonNull(getFromKey(pathToConfig,keyDefaultStartCommand));
     }
 
-    public static String getFinishCommand(String pathToConfig){
-        return Objects.requireNonNull(getValue(pathToConfig + "-options.yml")).get(keyDefaultFinishCommand).toString();
+    public static String getFinishCommand(Path pathToConfig){
+        return Objects.requireNonNull(getFromKey(pathToConfig,keyDefaultFinishCommand));
     }
 
-    public static String getSyncSource(String pathToConfig){
-        return Objects.requireNonNull(getValue(pathToConfig + "-options.yml")).get(keyDefaultSyncSource).toString();
+    public static String getSyncSource(Path pathToConfig){
+        return Objects.requireNonNull(getFromKey(pathToConfig,keyDefaultSyncSource));
     }
 
-    public static String getSyncDestination(String pathToConfig){
-        return Objects.requireNonNull(getValue(pathToConfig + "-options.yml")).get(keyDefaultSyncDestination).toString();
+    public static String getSyncDestination(Path pathToConfig){
+        return Objects.requireNonNull(getFromKey(pathToConfig,keyDefaultSyncDestination));
     }
 
-    public static String getBackupSource(String pathToConfig){
-        return Objects.requireNonNull(getValue(pathToConfig + "-options.yml")).get(keyDefaultBackupSource).toString();
+    public static String getBackupSource(Path pathToConfig){
+        return Objects.requireNonNull(getFromKey(pathToConfig,keyDefaultBackupSource));
     }
 
-    public static String getBackupDestination(String pathToConfig){
-        return Objects.requireNonNull(getValue(pathToConfig + "-options.yml")).get(keyDefaultBackupDestination).toString();
+    public static String getBackupDestination(Path pathToConfig){
+        return Objects.requireNonNull(getFromKey(pathToConfig,keyDefaultBackupDestination));
     }
 
-    public static String getBackupName(String pathToConfig){
-        return Objects.requireNonNull(getValue(pathToConfig + "-options.yml")).get(keyDefaultBackupName).toString();
+    public static String getBackupName(Path pathToConfig){
+        return Objects.requireNonNull(getFromKey(pathToConfig,keyDefaultBackupName));
     }
 
 }
