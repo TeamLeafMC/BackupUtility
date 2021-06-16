@@ -2,10 +2,10 @@ package net.mov51;
 
 import net.mov51.helpers.config.configHelper;
 
+import static net.mov51.backup.run.StartBackup;
 import static net.mov51.helpers.PterodactylApiHelper.sendCommand;
 import static net.mov51.helpers.archiveHelper.archive;
 import static net.mov51.helpers.config.configHelper.*;
-import static net.mov51.helpers.dateHelper.getFileSafeDate;
 import static net.mov51.rsync.execute.sync;
 
 public class Main {
@@ -22,9 +22,7 @@ public class Main {
 
         //test code to send command with ptero api
         //todo change this asap
-        sendCommand("say test");
-        sync("test1","test2",true);
-        archive("test2","newArchive__");
-        sendCommand("say test complete");
+        StartBackup("test1");
+
     }
 }
