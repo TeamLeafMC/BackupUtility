@@ -13,6 +13,7 @@ public class search {
                     if (fileEntry.isDirectory()) {
                         System.out.println("skipping invalid subdirectory " + fileEntry.getName());
                     } else {
+                        System.out.println("\n");
                         System.out.println(fileEntry.getName());
                         StartBackup(fileEntry.toPath());
                     }

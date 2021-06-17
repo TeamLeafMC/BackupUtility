@@ -28,20 +28,50 @@ public class yamlHelper {
         return null;
     }
 
-    protected static String getFromKey(Path pathToConfig,String key){
-        return Objects.requireNonNull(getValue(pathToConfig)).get(key).toString();
+    private static Map<String,Object> getValue(String Config){
+        try {
+            InputStream inputStream = new FileInputStream(String.valueOf(Config));
+            Yaml yaml = new Yaml();
+            return yaml.load(inputStream);
+
+        } catch (Exception e) {
+            //todo change to error logger
+            e.printStackTrace();
+            System.exit(1);
+        }
+        return null;
     }
 
-    protected static String getDefaultFromKey(String key){
-        return Objects.requireNonNull(getValue(userCoreConfigPath)).get(key).toString();
+    public static String SafeGetFromKey(Path pathToConfig,String key){
+        if(getValue(pathToConfig).containsKey(key)){
+            return getValue(pathToConfig).get(key).toString();
+        }else{
+            System.out.println(key + "did not exist in " + pathToConfig.getFileName());
+            System.exit(1);
+        }
+        return "false";
+    }
+
+    protected static String getFromKey(Path pathToConfig,String key){
+        return SafeGetFromKey(pathToConfig,key);
+    }
+
+    protected static String getDefaultCoreFromKey(String key){
+        if(getValue(defaultCoreConfigFile).containsKey(key)){
+            return getValue(defaultCoreConfigFile).get(key).toString();
+        }else{
+            System.out.println(key + "did not exist in " + defaultCoreConfigFile);
+            System.exit(1);
+        }
+        return "false";
     }
 
     protected static String getCoreFromKey(String key){
-        return Objects.requireNonNull(getValue(userCoreConfigPath)).get(key).toString();
+        return SafeGetFromKey(userCoreConfigPath,key);
     }
 
     protected static String getLogCoreFromKey(String key){
-        return Objects.requireNonNull(getValue(userCoreLogConfigFile)).get(key).toString();
+        return SafeGetFromKey(userCoreLogConfigFile,key);
     }
 
 }

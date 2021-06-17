@@ -13,10 +13,17 @@ public class execute {
     public static void sync(String source, String destination,Boolean recursive){
 
         Path userLogPath = Paths.get(getCoreLogFolder());
+        Path destinationPath = Paths.get(destination);
 
         if(!userLogPath.toFile().isDirectory()){
             if(userLogPath.toFile().mkdir())
                 System.out.println("config folder created!");
+        }
+
+        if(!destinationPath.toFile().exists()){
+            if(destinationPath.toFile().mkdirs()){
+                System.out.println("Sync Output Directory " + destinationPath.toFile().getName() + " created!");
+            }
         }
 
         RSync rsync = new RSync()

@@ -1,6 +1,7 @@
 package net.mov51.helpers;
 
 import java.io.*;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -8,18 +9,23 @@ import java.util.zip.ZipOutputStream;
 import static net.mov51.helpers.dateHelper.getFileSafeDate;
 
 public class archiveHelper {
-    public static void archive(String sourceFile,String archiveName){
+    public static void archive(String sourceFile,String archiveName,String backupLocation){
         System.out.println("Starting archival!");
-        String finalArchiveName = archiveName + getFileSafeDate() + ".zip";
+
+        if(Paths.get(backupLocation).toFile().mkdirs()){
+            System.out.println("Backup location " + backupLocation + " created!");
+        }
+
+        Path finalArchiveName = Paths.get(backupLocation + File.separator + archiveName + getFileSafeDate() + ".zip");
         try {
-            FileOutputStream fos = new FileOutputStream(finalArchiveName);
+            FileOutputStream fos = new FileOutputStream(String.valueOf(finalArchiveName));
             ZipOutputStream zipOut = new ZipOutputStream(fos);
             File fileToZip = new File(sourceFile);
 
             zipFile(fileToZip, fileToZip.getName(), zipOut);
             zipOut.close();
             fos.close();
-            if(Paths.get(finalArchiveName).toFile().exists()){
+            if(finalArchiveName.toFile().exists()){
                 System.out.println("Archive " + archiveName + " successfully created with full file name " + finalArchiveName);
             }
         }catch (Exception e) {
