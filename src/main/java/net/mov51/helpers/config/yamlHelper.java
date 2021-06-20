@@ -6,9 +6,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Map;
-import java.util.Objects;
 
-import static net.mov51.helpers.PterodactylApiHelper.*;
 import static net.mov51.helpers.config.configHelper.*;
 
 
@@ -50,10 +48,6 @@ public class yamlHelper {
             System.exit(1);
         }
         return "false";
-    }
-
-    protected static String getFromKey(Path pathToConfig,String key){
-        return SafeGetFromKey(pathToConfig,key);
     }
 
     protected static String getDefaultCoreFromKey(String key){

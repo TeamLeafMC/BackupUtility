@@ -10,7 +10,7 @@ public class coreGetters {
     public static final String keyDefaultLogFolder = "logFolder";
     public static final String keyDefaultSyncLogName = "SyncLogName";
 
-    //Get default values
+    //Get default core private values
 
     public static String getCorePanelURL(){
         return Objects.requireNonNull(getCoreFromKey(keyDefaultPanelURL));

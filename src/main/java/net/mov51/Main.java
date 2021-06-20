@@ -8,7 +8,7 @@ import static net.mov51.helpers.config.configHelper.*;
 
 public class Main {
 
-
+    public static final String BackupConfigurationDirectory = "backupConfig";
 
     public static void main(String[] args){
 
@@ -20,7 +20,6 @@ public class Main {
             System.exit(1);
         }
 
-        //test code to send command with ptero api
         searchForBackups();
 
     }

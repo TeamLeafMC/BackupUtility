@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 
-import static net.mov51.helpers.config.yamlHelper.getFromKey;
+import static net.mov51.helpers.config.yamlHelper.SafeGetFromKey;
 
 public class configHelper {
 
@@ -48,7 +48,7 @@ public class configHelper {
                             Map<String,Object> defaultConfigMap = yaml.load(defaultConfig);
 
                             defaultConfigMap.forEach((key, value) -> {
-                                if(value.equals(getFromKey(outputConfig,key))){
+                                if(value.equals(SafeGetFromKey(outputConfig,key))){
                                     //todo change to error logger
                                     System.out.println(key + " is the default Config value for " + name + "!");
                                     System.out.println("Please update the " + name + " file with your information!");
