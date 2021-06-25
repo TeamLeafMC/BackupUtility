@@ -17,7 +17,7 @@ public class run {
         //todo change to command array processor
         sendCommand(getStartCommand(path));
         //starting rsync
-        sync(getSyncSource(path),getSyncDestination(path),true);
+        sync(getSyncSource(path),getSyncFileName(path), getSyncDestination(path),getSyncVerbosity(path));
         //starting archive
         archive(getBackupSource(path),getBackupName(path),getBackupDestination(path));
         //sending command

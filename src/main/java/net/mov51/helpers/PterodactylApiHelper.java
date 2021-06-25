@@ -1,7 +1,5 @@
 package net.mov51.helpers;
 
-import net.mov51.helpers.config.coreGetters;
-
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;

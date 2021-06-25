@@ -1,7 +1,6 @@
 package net.mov51.backup;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Objects;
 
 import static net.mov51.Main.BackupConfigurationDirectory;

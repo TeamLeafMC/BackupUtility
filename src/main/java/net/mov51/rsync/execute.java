@@ -10,7 +10,7 @@ import static net.mov51.helpers.config.coreGetters.*;
 import static net.mov51.helpers.dateHelper.getFileSafeDate;
 
 public class execute {
-    public static void sync(String source, String destination,Boolean recursive){
+    public static void sync(String source, String logName, String destination,Boolean verbose){
 
         Path userLogPath = Paths.get(getCoreLogFolder());
         Path destinationPath = Paths.get(destination);
@@ -36,24 +36,23 @@ public class execute {
                 //adding new destination
         .destination(destination)
                 //setting recursive
-                //todo is this needed?
-        .recursive(recursive)
-                //setting the verbose state
-                //todo does verbosity affect the log output?
-        .verbose(true)
+        .recursive(true)
+                //setting the verbose state from config file
+        .verbose(verbose)
                 //transferring the whole file and preserving timestamps.
                 //This allows for a more stable sync over sshfs connections
         .wholeFile(true)
         .archive(true)
-                //defining the log output and adding the filesafe date
+                //defining the log output and adding the FileSafe date
                 //todo add placeholders
-        .logFile(getCoreLogFolder() + "/" + getCoreSyncFileName() +  getFileSafeDate() + ".txt");
+        .logFile(getCoreLogFolder() + "/" + logName +  getFileSafeDate() + ".txt");
 
         try {
             //displaying console output in primary log
             //todo change to info logger
-            //todo may need to move verbosity bool to here
             ConsoleOutputProcessOutput output = new ConsoleOutputProcessOutput();
+            //Start rsync task
+            System.out.println("Rsync task starting from " + destinationPath.toFile().getName() + " to " + Paths.get(source).toFile().getName());
             output.monitor(rsync.builder());
 
         } catch (Exception e) {

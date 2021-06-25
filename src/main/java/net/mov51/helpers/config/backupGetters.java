@@ -13,6 +13,7 @@ public class backupGetters {
     public static final String keyDefaultFinishCommand = "finishCommand";
     public static final String keyDefaultSyncSource = "syncSource";
     public static final String keyDefaultSyncDestination = "syncDestination";
+    public static final String keyDefaultSyncVerbosity = "SyncVerbose";
     public static final String keyDefaultBackupSource = "backupSource";
     public static final String keyDefaultBackupDestination = "backupDestination";
     public static final String keyDefaultBackupName = "backupName";
@@ -58,6 +59,10 @@ public class backupGetters {
 
     public static String getSyncDestination(Path pathToConfig){
         return SafeGetFromKey(pathToConfig,keyDefaultSyncDestination);
+    }
+
+    public static Boolean getSyncVerbosity(Path pathToConfig){
+        return Boolean.valueOf(SafeGetFromKey(pathToConfig,keyDefaultSyncVerbosity));
     }
 
     public static String getBackupSource(Path pathToConfig){

@@ -2,7 +2,6 @@ package net.mov51;
 
 import net.mov51.helpers.config.configHelper;
 
-import static net.mov51.backup.run.StartBackup;
 import static net.mov51.backup.search.searchForBackups;
 import static net.mov51.helpers.config.configHelper.*;
 
