@@ -1,5 +1,8 @@
 package net.mov51.helpers;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -7,13 +10,18 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static net.mov51.helpers.dateHelper.getFileSafeDate;
+import static net.mov51.helpers.logHelper.*;
 
 public class archiveHelper {
+
+    private static final org.apache.logging.log4j.Logger Logger = LogManager.getLogger("Archive_logger");
+
     public static void archive(String sourceFile,String archiveName,String backupLocation){
-        System.out.println("Starting archival!");
+        //todo return bool
+        logInfo(Logger,"Starting archival!");
 
         if(Paths.get(backupLocation).toFile().mkdirs()){
-            System.out.println("Backup location " + backupLocation + " created!");
+            logInfo(Logger,"Backup location " + backupLocation + " created!");
         }
 
         Path finalArchiveName = Paths.get(backupLocation + File.separator + archiveName + getFileSafeDate() + ".zip");
@@ -26,14 +34,18 @@ public class archiveHelper {
             zipOut.close();
             fos.close();
             if(finalArchiveName.toFile().exists()){
-                System.out.println("Archive " + archiveName + " successfully created with full file name " + finalArchiveName);
+                logInfo(Logger,"Archive " + archiveName + " successfully created with full file name " + finalArchiveName);
+            }else{
+                logFatal(Logger,"Archive " + archiveName + " could not be created!");
             }
         }catch (Exception e) {
-            e.printStackTrace();
+            //todo use fail safe
+            logFatalE(Logger,e,"Archive file could not be created!");
         }
     }
 
     private static void zipFile(File fileToZip, String fileName, ZipOutputStream zipOut) {
+        //todo return bool
         try {
             if (fileToZip.isHidden()) {
                 return;
@@ -63,6 +75,7 @@ public class archiveHelper {
             }
             fis.close();
         } catch (Exception e) {
+            //todo fatal
             e.printStackTrace();
         }
     }

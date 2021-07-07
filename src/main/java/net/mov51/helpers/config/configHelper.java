@@ -1,5 +1,7 @@
 package net.mov51.helpers.config;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -10,6 +12,7 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 import static net.mov51.helpers.config.yamlHelper.SafeGetFromKey;
+import static net.mov51.helpers.logHelper.*;
 
 public class configHelper {
 
@@ -21,20 +24,21 @@ public class configHelper {
     public static final String defaultCoreConfigFile = "/defaultConfig.yml";
     public static final String defaultLogConfigFile = "/defaultBackupConfig.yml";
 
+    private static final Logger Logger = LogManager.getLogger("Config_logger");
+
 
     public static boolean initiateConfig(String internalConfig, Path outputConfig, boolean Validate, String name){
 
-
         if(!userConfigFolder.toFile().isDirectory()){
-            if(userCoreConfigPath.toFile().mkdir())
-                System.out.println("config folder created!");
+            if(userCoreConfigPath.toFile().mkdirs())
+                logInfo(Logger,"config folder created!");
         }
 
         try (InputStream defaultConfig = configHelper.class.getResourceAsStream(internalConfig)) {
             if(defaultConfig != null){
                 if(outputConfig.toFile().exists()){
                     if(Validate){
-                        System.out.println("Checking Core Config for invalid/default entries...");
+                        logInfo(Logger,"Checking Core Config for invalid/default entries...");
                     /* The active coreConfig.yml should *only* have non-default entries.
                     It will only be used for things that are essential for the program
                     to work such as the api token and server URI.
@@ -49,46 +53,42 @@ public class configHelper {
 
                             defaultConfigMap.forEach((key, value) -> {
                                 if(value.equals(SafeGetFromKey(outputConfig,key))){
-                                    //todo change to error logger
-                                    System.out.println(key + " is the default Config value for " + name + "!");
-                                    System.out.println("Please update the " + name + " file with your information!");
+                                    logError(Logger,key + " is the default Config value for " + name + "!");
+                                    logError(Logger,"This is used as the fallback when no value is provided and needs to exist!");
+                                    logFatalExit(Logger,"Please update the " + name + " file with your information!");
                                     //todo add link to wiki page
-                                    System.exit(1);
                                 }else{
-                                    //todo log as info
-                                    System.out.println("-- Config value " + key + " exists in " + name + " and has been changed from the default value.");
+                                    logError(Logger,"-- Config value " + key + " exists in " + name + " and has been changed from the default value.");
+                                    //todo do basic verification steps
                                 }
                             });
                         } catch (Exception e) {
-                            //todo change to error logger
-                            e.printStackTrace();
+                            logFatalExitE(Logger,e,"Failed to load the " + name + " YAML file as a map!");
                         }
-                        System.out.println(name + "exists and contains non-default entries");
+                        logInfo(Logger,name + "exists and contains non-default entries");
                     }else{
-                        System.out.println("Core Config file exists.");
+                        logInfo(Logger,"Core Config file exists.");
                     }
 
                 }else{
-                    //todo change to error logger
-                    System.out.println(name + " file does not exist. Creating Default " + name + "file.");
-                    Files.copy(defaultConfig, outputConfig);
-                    System.out.println(name + "file created :D");
-                    //todo change to error logger
-                    System.out.println("Please update it with your values!");
-                    //todo add link to wiki page
-                    return true;
+                    logError(Logger,name + " file does not exist. Creating Default " + name + "file.");
+                    try {
+                        Files.copy(defaultConfig, outputConfig);
+                        logInfo(Logger,name + "file created :D");
+                        //todo create folder path iterator
+                        logFatalExit(Logger,"Please update it with your values!");
+                    }catch (Exception e) {
+                        logFatalExitE(Logger,e, "Could not create " + name + "file!");
+                    }
                 }
                 return false;
             }else{
-                //todo change to error logger
-                System.out.println("Default " + name + " was null...");
+                logFatal(Logger,"Default " + name + " was null...");
                 return true;
             }
 
         }catch(Exception e){
-            //todo change to error logger
-            System.out.println(name + " file could not be tested!");
-            e.printStackTrace();
+            logFatalE(Logger,e,name + " file could not be tested!");
             return true;
         }
     }

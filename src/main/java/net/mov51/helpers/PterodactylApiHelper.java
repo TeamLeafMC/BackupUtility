@@ -1,13 +1,20 @@
 package net.mov51.helpers;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import static net.mov51.helpers.config.coreGetters.*;
+import static net.mov51.helpers.logHelper.*;
+
 
 public class PterodactylApiHelper {
+
+    private static final Logger Logger = LogManager.getLogger("PterodactylAPI_Logger");
 
     /*
     todo Verify global core config and passed cycle configs
@@ -23,6 +30,7 @@ public class PterodactylApiHelper {
     public static final String keyDefaultAPIkey = "key";
 
     private static boolean sendCommandRequest(String command){
+        //todo receive uuid to send command to
 
         try {
             //build API url
@@ -53,30 +61,34 @@ public class PterodactylApiHelper {
                 return true;
             }else{
                 //todo change to error logger
+                //todo create fail safe class to notify user of failures
+                //todo create error logger that can handle https errors
                 System.out.println(http.getResponseCode());
                 System.out.println(http.getResponseMessage());
                 http.disconnect();
                 return false;
             }
         } catch (Exception e) {
-            //todo change to error logger
-            e.printStackTrace();
+            //leaving this as error instead of fatal
+            //the rest of the error response needs to be handled by the fail safe class
+            //todo create fail safe class to notify user of failures
+            logErrorE(Logger,e,"Could not connect to the Pterodactyl API for server with UUID " + getCoreServerUUID());
             return false;
         }
 
     }
 
     public static boolean sendCommand(String command){
-        //change to accept separate named UUIDS
-        //todo log as info
-        System.out.println("Sending command \"" + command + "\" to server with UUID " + getCoreServerUUID());
+        //todo receive uuid to send command to
+        logInfo(Logger,"Sending command \"" + command + "\" to server with UUID " + getCoreServerUUID());
         if(!sendCommandRequest(command)){
-            //todo change to error logger
-            System.out.println("Command \"" + command + "\" could not be sent to server with UUID " + getCoreServerUUID());
+            //leaving this as error instead of fatal
+            //the rest of the error response needs to be handled by the fail safe class
+            //todo create fail safe class to notify user of failures
+            logError(Logger,"Command \"" + command + "\" could not be sent to server with UUID " + getCoreServerUUID());
             return false;
         }else{
-            //todo log as info
-            System.out.println("Command \"" + command + "\" was successfully sent server with UUID " + getCoreServerUUID());
+            logInfo(Logger,"Command \"" + command + "\" was successfully sent server with UUID " + getCoreServerUUID());
         }
         return true;
     }
