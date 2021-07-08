@@ -75,8 +75,8 @@ public class archiveHelper {
             }
             fis.close();
         } catch (Exception e) {
-            //todo fatal
-            e.printStackTrace();
+            //todo use fail safe
+            logFatalE(Logger,e,"File " + fileName + " could not be zipped!");
         }
     }
 }

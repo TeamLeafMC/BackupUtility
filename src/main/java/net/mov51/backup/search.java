@@ -10,6 +10,7 @@ public class search {
     public static void searchForBackups() {
         //search backupConfig Dir for custom backup configurations
         File folder = new File(BackupConfigurationDirectory);
+        //todo create dir
         //for each fileEntry
         for (File fileEntry : Objects.requireNonNull(folder.listFiles())) {
             if (fileEntry.isDirectory()) {
