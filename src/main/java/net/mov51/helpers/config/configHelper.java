@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 import static net.mov51.helpers.config.yamlHelper.SafeGetFromKey;
+import static net.mov51.helpers.fileHelper.createDirs;
 import static net.mov51.helpers.logHelper.*;
 
 public class configHelper {
@@ -28,11 +29,9 @@ public class configHelper {
 
 
     public static boolean initiateConfig(String internalConfig, Path outputConfig, boolean Validate, String name){
-
-        if(!userConfigFolder.toFile().isDirectory()){
-            if(userCoreConfigPath.toFile().mkdirs())
-                logInfo(Logger,"config folder created!");
-        }
+        //todo rebuild into initiate core configs
+        // - clarify that it's just for core configs
+        // - move utils used for core configs to separate methods to re-use for separated core configs
 
         try (InputStream defaultConfig = configHelper.class.getResourceAsStream(internalConfig)) {
             if(defaultConfig != null){
@@ -73,9 +72,15 @@ public class configHelper {
                 }else{
                     logError(Logger,name + " file does not exist. Creating Default " + name + "file.");
                     try {
+
+                            if(createDirs(outputConfig)){
+                                logInfo(Logger,"Verifying default configuration directory for " + name);
+                            }else{
+                                logError(Logger,"Failed to create default configuration directory for " + name + "!");
+                            }
+
                         Files.copy(defaultConfig, outputConfig);
                         logInfo(Logger,name + "file created :D");
-                        //todo create folder path iterator
                         logFatalExit(Logger,"Please update it with your values!");
                     }catch (Exception e) {
                         logFatalExitE(Logger,e, "Could not create " + name + "file!");
