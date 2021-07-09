@@ -1,5 +1,6 @@
 package net.mov51.helpers;
 
+import net.mov51.helpers.config.backupConfigBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -8,8 +9,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-import static net.mov51.helpers.config.coreGetters.*;
 import static net.mov51.helpers.logHelper.*;
+
 
 
 public class PterodactylApiHelper {
@@ -29,12 +30,12 @@ public class PterodactylApiHelper {
     public static final String keyDefaultSeverUUID = "serverUUID";
     public static final String keyDefaultAPIkey = "key";
 
-    private static boolean sendCommandRequest(String command){
+    private static boolean sendCommandRequest(String command,backupConfigBuilder config){
         //todo receive uuid to send command to
 
         try {
             //build API url
-            URL url = new URL(getCorePanelURL() + "/api/client/servers/"+ getCoreServerUUID() + "/command");
+            URL url = new URL(config.panelURL + "/api/client/servers/"+ config.panelURL + "/command");
 
             HttpURLConnection http = (HttpURLConnection)url.openConnection();
 
@@ -45,7 +46,7 @@ public class PterodactylApiHelper {
             http.setRequestProperty("Accept", "application/vnd.wisp.v1+json");
 
             //use provided key to authorize
-            http.setRequestProperty("Authorization", "Bearer " + getCoreAPIkey());
+            http.setRequestProperty("Authorization", "Bearer " + config.apiKey);
 
             //send command
             String data = "{\"command\": \"" + command + "\"}";
@@ -72,23 +73,23 @@ public class PterodactylApiHelper {
             //leaving this as error instead of fatal
             //the rest of the error response needs to be handled by the fail safe class
             //todo create fail safe class to notify user of failures
-            logErrorE(Logger,e,"Could not connect to the Pterodactyl API for server with UUID " + getCoreServerUUID());
+            logErrorE(Logger,e,"Could not connect to the Pterodactyl API for server with UUID " + config.serverUUID);
             return false;
         }
 
     }
 
-    public static boolean sendCommand(String command){
+    public static boolean sendCommand(String command, backupConfigBuilder config){
         //todo receive uuid to send command to
-        logInfo(Logger,"Sending command \"" + command + "\" to server with UUID " + getCoreServerUUID());
-        if(!sendCommandRequest(command)){
+        logInfo(Logger,"Sending command \"" + command + "\" to server with UUID " + config.serverUUID);
+        if(!sendCommandRequest(command, config)){
             //leaving this as error instead of fatal
             //the rest of the error response needs to be handled by the fail safe class
             //todo create fail safe class to notify user of failures
-            logError(Logger,"Command \"" + command + "\" could not be sent to server with UUID " + getCoreServerUUID());
+            logFatal(Logger,"Command \"" + command + "\" could not be sent to server with UUID " + config.serverUUID);
             return false;
         }else{
-            logInfo(Logger,"Command \"" + command + "\" was successfully sent server with UUID " + getCoreServerUUID());
+            logInfo(Logger,"Command \"" + command + "\" was successfully sent server with UUID " + config.serverUUID);
         }
         return true;
     }

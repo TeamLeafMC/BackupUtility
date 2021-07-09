@@ -3,22 +3,25 @@ package net.mov51.rsync;
 import com.github.fracpete.processoutput4j.output.ConsoleOutputProcessOutput;
 import com.github.fracpete.rsync4j.RSync;
 import org.apache.logging.log4j.LogManager;
+
+import static net.mov51.Main.globalConfig;
 import static net.mov51.helpers.logHelper.*;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static net.mov51.helpers.config.coreGetters.*;
 import static net.mov51.helpers.dateHelper.getFileSafeDate;
 
 public class execute {
 
     private static final org.apache.logging.log4j.Logger Logger = LogManager.getLogger("Rsync_Logger");
 
-    public static void sync(String source, String logName, String destination,Boolean verbose){
+    public static void sync(String source,String destination,String logName,Boolean verbose){
 
 
-        Path userLogPath = Paths.get(getCoreLogFolder());
+
+
+        Path userLogPath = Paths.get(globalConfig.logFolder);
         Path destinationPath = Paths.get(destination);
 
         //creating user defined sync log directory
@@ -56,7 +59,7 @@ public class execute {
         .archive(true)
                 //defining the log output and adding the FileSafe date
                 //todo add placeholders
-        .logFile(getCoreLogFolder() + "/" + logName +  getFileSafeDate() + ".txt");
+        .logFile(globalConfig.logFolder + "/" + logName +  getFileSafeDate() + ".txt");
 
         try {
             //displaying console output in primary log

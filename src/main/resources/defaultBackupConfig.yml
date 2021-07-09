@@ -1,14 +1,13 @@
-logFolder: logs/
-SyncLogName: syncLog
+logFolder: 'logs/'
+syncLogName: 'syncLog'
+BackupLogName: 'backupLog'
 
-SyncVerbose: true
+syncSource: 'serverSource'
+syncDestination: 'localDestination'
 
-syncSource: serverSource
-syncDestination: localDestination
+backupSource: 'backupSource'
+backupDestination: 'backupDestination'
+backupName: 'backup-archive'
 
-backupSource: backupSource
-backupDestination: backupDestination
-backupName: backup-archive
-
-startCommand: save-off
-finishCommand: save-on
+startCommand: 'save-off'
+finishCommand: 'save-on'

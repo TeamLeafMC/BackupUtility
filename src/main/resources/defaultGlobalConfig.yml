@@ -1,0 +1,12 @@
+logFolder: logs/
+syncLogName: syncLog
+
+syncSource: serverSource
+syncDestination: localDestination
+
+backupSource: backupSource
+backupDestination: backupDestination
+backupName: backup-archive
+
+startCommand: save-off
+finishCommand: save-on
