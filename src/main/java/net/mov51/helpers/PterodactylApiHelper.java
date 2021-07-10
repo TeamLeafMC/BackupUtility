@@ -1,6 +1,6 @@
 package net.mov51.helpers;
 
-import net.mov51.helpers.config.backupConfigBuilder;
+import net.mov51.helpers.config.backupConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,16 +26,12 @@ public class PterodactylApiHelper {
       -https://docs.panel.gg/#get-a-specific-server
     */
 
-    public static final String keyDefaultPanelURL = "panelURL";
-    public static final String keyDefaultSeverUUID = "serverUUID";
-    public static final String keyDefaultAPIkey = "key";
-
-    private static boolean sendCommandRequest(String command,backupConfigBuilder config){
+    private static boolean sendCommandRequest(String command, backupConfig config){
         //todo receive uuid to send command to
 
         try {
             //build API url
-            URL url = new URL(config.panelURL + "/api/client/servers/"+ config.panelURL + "/command");
+            URL url = new URL(config.getPterodactylPanelURL() + "/api/client/servers/"+ config.getPterodactylServerUUID() + "/command");
 
             HttpURLConnection http = (HttpURLConnection)url.openConnection();
 
@@ -46,7 +42,7 @@ public class PterodactylApiHelper {
             http.setRequestProperty("Accept", "application/vnd.wisp.v1+json");
 
             //use provided key to authorize
-            http.setRequestProperty("Authorization", "Bearer " + config.apiKey);
+            http.setRequestProperty("Authorization", "Bearer " + config.getPterodactylAPIkey());
 
             //send command
             String data = "{\"command\": \"" + command + "\"}";
@@ -64,6 +60,7 @@ public class PterodactylApiHelper {
                 //todo change to error logger
                 //todo create fail safe class to notify user of failures
                 //todo create error logger that can handle https errors
+                System.out.println(http.getURL());
                 System.out.println(http.getResponseCode());
                 System.out.println(http.getResponseMessage());
                 http.disconnect();
@@ -73,23 +70,23 @@ public class PterodactylApiHelper {
             //leaving this as error instead of fatal
             //the rest of the error response needs to be handled by the fail safe class
             //todo create fail safe class to notify user of failures
-            logErrorE(Logger,e,"Could not connect to the Pterodactyl API for server with UUID " + config.serverUUID);
+            logErrorE(Logger,e,"Could not connect to the Pterodactyl API for server with UUID " + config.getPterodactylServerUUID());
             return false;
         }
 
     }
 
-    public static boolean sendCommand(String command, backupConfigBuilder config){
+    public static boolean sendCommand(String command, backupConfig config){
         //todo receive uuid to send command to
-        logInfo(Logger,"Sending command \"" + command + "\" to server with UUID " + config.serverUUID);
+        logInfo(Logger,"Sending command \"" + command + "\" to server with UUID " + config.getPterodactylServerUUID());
         if(!sendCommandRequest(command, config)){
             //leaving this as error instead of fatal
             //the rest of the error response needs to be handled by the fail safe class
             //todo create fail safe class to notify user of failures
-            logFatal(Logger,"Command \"" + command + "\" could not be sent to server with UUID " + config.serverUUID);
+            logFatal(Logger,"Command \"" + command + "\" could not be sent to server with UUID " + config.getPterodactylServerUUID());
             return false;
         }else{
-            logInfo(Logger,"Command \"" + command + "\" was successfully sent server with UUID " + config.serverUUID);
+            logInfo(Logger,"Command \"" + command + "\" was successfully sent server with UUID " + config.getPterodactylServerUUID());
         }
         return true;
     }

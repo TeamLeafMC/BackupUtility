@@ -15,37 +15,29 @@ import static net.mov51.helpers.fileHelper.createDirs;
 import static net.mov51.helpers.logHelper.*;
 import static net.mov51.helpers.logHelper.logFatalExitE;
 
-public class coreConfigBuilder {
+public class coreConfig {
+
+    private static final org.apache.logging.log4j.Logger Logger = LogManager.getLogger("coreConfigBuilder");
 
     private static final Path userCoreConfigPath = Paths.get("config" + File.separator + "coreConfig.yml");
     private static final String internalCoreConfigPath = "/defaultBackupConfig.yml";
 
-    public final String keyDefaultAPIkey = "key";
-    public final String keyDefaultSeverUUID = "serverUUID";
-    public final String keyDefaultPanelURL = "panelURL";
+    protected final String keyDefaultAPIkey = "key";
+    protected final String keyDefaultSeverUUID = "serverUUID";
+    protected final String keyDefaultPanelURL = "panelURL";
 
-    public String apiKey;
-    public String serverUUID;
-    public String panelURL;
-
-    private static final org.apache.logging.log4j.Logger Logger = LogManager.getLogger("coreConfigBuilder");
-
-    private final Map<String, Object> defaultConfigMap = getMap(userCoreConfigPath);
+    private Map<String, Object> defaultConfigMap;
 
     //create Singleton, there should only ever be one instance of the core config file for the duration of the program run
     //this class will also handle the initialization of the core config file
 
-    private static final coreConfigBuilder INSTANCE = new coreConfigBuilder();
+    private static final coreConfig INSTANCE = new coreConfig();
 
-    private coreConfigBuilder() {
+    private coreConfig() {
 
 
         if(userCoreConfigPath.toFile().exists()) {
-            //todo create and use core verification method
-            //map used to test other core values for default settings
-            apiKey = defaultConfigMap.get(keyDefaultAPIkey).toString();
-            serverUUID = defaultConfigMap.get(keyDefaultSeverUUID).toString();
-            panelURL = defaultConfigMap.get(keyDefaultPanelURL).toString();
+            defaultConfigMap = getMap(userCoreConfigPath);
         }
         else
         {
@@ -74,15 +66,22 @@ public class coreConfigBuilder {
 
     }
 
-    public String getCoreByKey(String key){
-        return defaultConfigMap.get(key).toString();
-    }
 
-    public static coreConfigBuilder getInstance() {
+
+    public static coreConfig getInstance() {
         return INSTANCE;
     }
 
+    public static String getPterodactylAPIkey(){
+        return INSTANCE.defaultConfigMap.get(INSTANCE.keyDefaultAPIkey).toString();
+    }
 
+    public static String getPterodactylPanelURL(){
+        return INSTANCE.defaultConfigMap.get(INSTANCE.keyDefaultPanelURL).toString();
+    }
 
+    public static String getPterodactylServerUUID(){
+        return INSTANCE.defaultConfigMap.get(INSTANCE.keyDefaultSeverUUID).toString();
+    }
 
 }

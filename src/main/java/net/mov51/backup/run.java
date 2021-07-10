@@ -1,6 +1,6 @@
 package net.mov51.backup;
 
-import net.mov51.helpers.config.backupConfigBuilder;
+import net.mov51.helpers.config.backupConfig;
 
 import java.nio.file.Path;
 
@@ -16,18 +16,18 @@ public class run {
         System.out.println("Running backup " + path.getFileName());
 
         //getting backup config object
-        backupConfigBuilder config = new backupConfigBuilder(path.toString());
+        backupConfig config = new backupConfig(path.toString());
 
         //sending command
         //todo change to command array processor
-        sendCommand(config.startCommand, config);
+        sendCommand(config.getStartCommand(), config);
         //starting rsync
-        sync(config.syncSource,config.syncDestination,config.syncLogName,true);
+        sync(config);
         //starting archive
-        archive(config.backupSource, config.backupName, config.backupDestination);
+        archive(config.getBackupSource(), config.getBackupName(), config.getBackupDestination());
         //sending command
         //todo change to command array processor
-        sendCommand(config.finishCommand, config);
+        sendCommand(config.getFinishCommand(), config);
         //todo change to info logger
         System.out.println("Backup " + path.getFileName() + " complete!");
         System.out.println("---------------------");
