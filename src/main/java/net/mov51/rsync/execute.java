@@ -56,6 +56,7 @@ public class execute {
             output.monitor(rsync.builder());
 
         } catch (Exception e) {
+            //todo use Rsync failsafe
             logErrorE(Logger,e,"Rsync task to location " + config.getSyncDestination() + " failed!");
         }
 

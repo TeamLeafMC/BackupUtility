@@ -37,8 +37,8 @@ public class archiveHelper {
             }else{
                 logFatal(Logger,"Archive " + archiveName + " could not be created!");
             }
-        }catch (Exception e) {
-            //todo use fail safe
+        }catch (IOException e) {
+            //todo use archive failsafe
             logFatalE(Logger,e,"Archive file could not be created!");
         }
     }
@@ -73,8 +73,9 @@ public class archiveHelper {
                 zipOut.write(bytes, 0, length);
             }
             fis.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             //todo use fail safe
+            //todo use archive failsafe
             logFatalE(Logger,e,"File " + fileName + " could not be zipped!");
         }
     }

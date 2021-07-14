@@ -4,6 +4,7 @@ import net.mov51.helpers.config.backupConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -66,10 +67,10 @@ public class PterodactylApiHelper {
                 http.disconnect();
                 return false;
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             //leaving this as error instead of fatal
             //the rest of the error response needs to be handled by the fail safe class
-            //todo create fail safe class to notify user of failures
+            //todo use Pterodactyl connection failsafe
             logErrorE(Logger,e,"Could not connect to the Pterodactyl API for server with UUID " + config.getPterodactylServerUUID());
             return false;
         }

@@ -1,6 +1,7 @@
 package net.mov51.helpers.config;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -59,7 +60,8 @@ public class coreConfig {
                     logFatalExit(Logger, "Could not create the Core Config file!");
                 }              logInfo(Logger," Core Config file was created :D");
                 logFatalExit(Logger,"Please update it with your values!");
-            }catch (Exception e) {
+            }catch (IOException e) {
+                //todo use initialization failsafe
                 logFatalExitE(Logger,e, "Could not create the Core Config file!");
             }
         }

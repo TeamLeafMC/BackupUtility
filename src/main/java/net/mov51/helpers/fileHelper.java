@@ -14,15 +14,10 @@ public class fileHelper {
     public static boolean createDirs(File filePath){
         File parent = filePath.getParentFile();
         if(!parent.exists()){
-            try{
                 if(parent.mkdirs()){
                     logInfo(Logger,"Directory " + parent + " created!");
                     return true;
                 }
-            }catch (Exception e){
-                logError(Logger,"Couldn't create directory " + parent);
-                return false;
-            }
         }
         return true;
     }

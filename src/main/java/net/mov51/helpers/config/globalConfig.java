@@ -3,6 +3,7 @@ package net.mov51.helpers.config;
 import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,12 +39,7 @@ public class globalConfig {
 
     private globalConfig(){
         if(userGlobalConfigPath.toFile().exists()){
-            try{
-                configMap = getMap(userGlobalConfigPath);
-
-            }catch (Exception e){
-                logFatalExitE(Logger,e,"Couldn't load the Global Configuration file!");
-            }
+            configMap = getMap(userGlobalConfigPath);
         }
         else
         {
@@ -65,7 +61,8 @@ public class globalConfig {
                     logFatalExit(Logger, "Could not create the Global Configuration file!");
                 }              logInfo(Logger," Global Configuration file was created :D");
                 logFatalExit(Logger,"Please update it with your values!");
-            }catch (Exception e) {
+            }catch (IOException e) {
+                //todo use Initialization failsafe
                 logFatalExitE(Logger,e, "Could not create the Global Configuration file!");
             }
         }
