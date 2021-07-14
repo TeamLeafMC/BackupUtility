@@ -15,7 +15,7 @@ public class run {
     private static final org.apache.logging.log4j.Logger Logger = LogManager.getLogger("runBackupLogger");
 
     public static void StartBackup(Path path){
-        
+
         logInfo(Logger,"---------------------");
         logInfo(Logger,"Running backup " + path.getFileName());
 
