@@ -43,10 +43,13 @@ public class execute {
                 //transferring the whole file and preserving timestamps.
                 //This allows for a more stable sync over sshfs connections
         .wholeFile(true)
-        .archive(true)
-                //defining the log output and adding the FileSafe date
-                //todo add placeholders
-        .logFile(config.getSyncLogFolder() + "/" + config.getSyncLogName() +  getFileSafeDate() + ".txt");
+        .archive(true);
+
+        if(!config.getSyncLogName().isEmpty()){
+            //defining the log output and adding the FileSafe date
+            //todo add placeholders
+            rsync.logFile(config.getSyncLogFolder() + "/" + config.getSyncLogName() +  getFileSafeDate() + ".txt");
+        }
 
         try {
             //displaying console output in primary log

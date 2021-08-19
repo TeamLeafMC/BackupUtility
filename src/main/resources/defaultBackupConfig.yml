@@ -1,21 +1,21 @@
-#general logging
+#---general logging---
 logFolder: 'logs/'
 logName: 'log'
 
-#Sync Logging
-#--optional
+#---Sync Logging---
+#--optional--
 #syncLogFolder: 'syncLogs'
 #syncLogName: 'syncLog'
 
-#Backup Logging
-#--optional
+#---Backup Logging---
+#--optional--
 #backupLogFolder: 'backupLogs'
 #backupLogName: 'backupLog'
 
 syncSource: 'serverSource'
 syncDestination: 'localDestination'
 
-#Will use the syncDestination by default.
+#--Will use the syncDestination by default--
 #backupSource: 'backupSource'
 backupDestination: 'backupDestination'
 backupName: 'backup-archive'

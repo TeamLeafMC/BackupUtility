@@ -21,7 +21,7 @@ public class coreConfig {
     private static final org.apache.logging.log4j.Logger Logger = LogManager.getLogger("coreConfigBuilder");
 
     private static final Path userCoreConfigPath = Paths.get("config" + File.separator + "coreConfig.yml");
-    private static final String internalCoreConfigPath = "/defaultBackupConfig.yml";
+    private static final String internalCoreConfigPath = "/defaultCoreConfig.yml";
 
     private Map<String, Object> configMap;
 
@@ -33,7 +33,7 @@ public class coreConfig {
     private enum coreKeys {
         APIkey ("APIkey"),
         serverUUID ("serverUUID"),
-        panelURL ("PanelURL");
+        panelURL ("panelURL");
 
         public final String defaultKey;
 
@@ -95,9 +95,13 @@ public class coreConfig {
     }
 
     private String loadGetter(String key){
-        if(configMap.containsKey(key))
+        if(configMap.containsKey(key)){
             return configMap.get(key).toString();
-        return null;
+        }else{
+            logFatal(Logger,"Could not lod key " + key + " from coreConfig!");
+            return null;
+        }
+
     }
 
 }

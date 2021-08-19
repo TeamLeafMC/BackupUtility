@@ -16,6 +16,7 @@ public class search {
     public static void searchForBackups() {
 
         //search backupConfig Dir for custom backup configurations
+        //todo if no backups configs exist, create a default file
         //todo verify all backups for valid information BEFORE running
         File folder = new File(BackupConfigurationDirectory);
         //for each fileEntry

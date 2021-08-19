@@ -150,7 +150,7 @@ public class globalConfig {
     private String loadGetter(String key){
         if(configMap.containsKey(key))
             return configMap.get(key).toString();
-        return null;
+        return "";
     }
 
 }
