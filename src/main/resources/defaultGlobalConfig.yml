@@ -1,22 +1,16 @@
-logFolder: logs/
-logName: log
+#general logging
+logFolder: 'logs/'
+logName: 'log'
 
-#--Enable to get separate logs for all backups/syncs
-#--it can still be used selectively in individual backups configs
-#backupLogFolder: logs/backups/
-#syncLogName: syncLog
-#syncLogFolder: logs/syncs/
-#backupLogName: backupSource
+#Sync Logging
+#--optional
+#syncLogFolder: 'syncLogs'
+#syncLogName: 'syncLog'
 
+#Backup Logging
+#--optional
+#backupLogFolder: 'backupLogs'
+#backupLogName: 'backupLog'
 
-syncSource: serverSource
-syncDestination: localDestination
-
-#--Enable this if you need to use a location other than the sync destination
-#--it can still be used selectively in individual backups configs
-#backupSource: localDestination
-backupDestination: backupDestination
-backupName: backup-archive
-
-startCommand: save-off
-finishCommand: save-on
+#backup settings
+backupName: 'backup-archive'

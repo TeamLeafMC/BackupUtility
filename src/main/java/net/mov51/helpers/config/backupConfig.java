@@ -2,222 +2,158 @@ package net.mov51.helpers.config;
 
 import org.apache.logging.log4j.LogManager;
 
-import java.io.File;
-import java.nio.file.Paths;
 import java.util.Map;
 
 import static net.mov51.helpers.config.yamlHelper.getMap;
-import static net.mov51.helpers.logHelper.logError;
-import static net.mov51.helpers.logHelper.logInfo;
 
 public class backupConfig {
 
     private static final org.apache.logging.log4j.Logger Logger = LogManager.getLogger("backupConfigBuilder");
 
-    protected String logFolderDefaultKey = "logFolder";
-    protected String backupLogFolderDefaultKey = "backupLogFolder";
-    protected String syncLogFolderFolderDefaultKey = "syncLogFolder";
-    protected String syncLogNameDefaultKey = "syncLogName";
-    protected String backupLogNameDefaultKey = "backupLogName";
+    private enum backupKeys {
+        //logging
+        logFolder ("logFolder"),
+        logName ("logName"),
 
-    protected String syncSourceDefaultKey = "syncSource";
-    protected String syncDestinationDefaultKey = "syncDestination";
+        //sync Logging
+        syncLogFolder ("syncLogFolder"),
+        syncLogName ("syncLogName"),
 
-    protected String backupSourceDefaultKey = "backupSource";
-    protected String backupDestinationDefaultKey = "backupDestination";
-    protected String backupNameDefaultKey = "backupName";
+        //backup logging
+        backupLogFolder ("backupLogFolder"),
+        backupLogName ("backupLogName"),
 
-    protected String startCommandsDefaultKey = "startCommand";
-    protected String finishCommandsDefaultKey = "finishCommand";
+        //sync settings
+        syncSource ("syncSource"),
+        syncDestination ("syncDestination"),
+
+        //backup settings
+        backupSource ("backupSource"),
+        backupDestination ("backupDestination"),
+        backupName ("backupName"),
+
+        //commands
+        startCommand ("startCommand"),
+        finishCommand ("finishCommand");
+
+        public final String defaultKey;
+
+        backupKeys(String defaultKey) {
+            this.defaultKey = defaultKey;
+        }
+    }
 
     Map<String, Object> configMap;
+
+    globalConfig Global = globalConfig.getInstance();
+    coreConfig Core = coreConfig.getInstance();
 
     public backupConfig(String configPath){
         this.configMap = getMap(configPath);
     }
 
     public String getLogFolder(){
-        String key = this.logFolderDefaultKey ;
-        if(configMap.containsKey(key)){
-            return configMap.get(key).toString();
-        }else{
-            return null;
-        }
+        //uses global logFolder as default
+        String key = backupKeys.logFolder.defaultKey;
+        return loadGetter(key,Global.getLogFolder());
+    }
+
+    public String getLogName(){
+        //uses global logFolder as default
+        String key = backupKeys.logName.defaultKey;
+        return loadGetter(key,Global.getLogName());
     }
 
     public String getSyncLogFolder(){
-        String key = this.syncLogFolderFolderDefaultKey;
-        if(configMap.containsKey(key)){
-            String out = configMap.get(key).toString();
-            File file = Paths.get(out).toFile();
-
-            if(!file.isDirectory()){
-                if(file.mkdirs()) {
-                    logInfo(Logger, "config folder created!");
-                }else{
-                    logError(Logger, "config folder could not be created!");
-                }
-            }
-            return out;
-        }else{
-            return this.getLogFolder();
-        }
+        //uses global syncLogFolder as default
+        String key = backupKeys.syncLogFolder.defaultKey;
+        return loadGetter(key,Global.getSyncLogFolder());
     }
 
     public String getBackupLogFolder(){
-        String key = this.backupLogFolderDefaultKey;
-        if(configMap.containsKey(key)){
-            String out = configMap.get(key).toString();
-            File file = Paths.get(out).toFile();
-
-            if(!file.isDirectory()){
-                if(file.mkdirs()) {
-                    logInfo(Logger, "log folder created!");
-                }else{
-                    logError(Logger, "log folder could not be created!");
-                }
-            }
-            return out;
-        }else{
-            return this.getLogFolder();
-        }
+        //uses global backupLogFolder as default
+        String key = backupKeys.backupLogFolder.defaultKey;
+        return loadGetter(key,Global.getBackupLogFolder());
     }
 
     public String getSyncLogName(){
-        String key = this.syncLogNameDefaultKey;
-        if(configMap.containsKey(key)){
-            return configMap.get(key).toString();
-        }else{
-            return null;
-        }
+        //uses global syncLogName as default
+        String key = backupKeys.syncLogName.defaultKey;
+        return loadGetter(key,Global.getSyncLogName());
     }
 
     public String getBackupLogName(){
-        String key = this.backupLogNameDefaultKey;
-        if(configMap.containsKey(key)){
-            return configMap.get(key).toString();
-        }else{
-            return null;
-        }
+        //uses global backupLogName as default
+        String key = backupKeys.backupLogName.defaultKey;
+        return loadGetter(key,Global.getBackupLogName());
     }
 
     public String getSyncSource(){
-        String key = this.syncSourceDefaultKey;
-        if(configMap.containsKey(key)){
-            return configMap.get(key).toString();
-        }else{
-            return null;
-        }
+        String key = backupKeys.syncSource.defaultKey;
+        return loadGetter(key);
     }
 
     public String getSyncDestination(){
-        String key = this.syncDestinationDefaultKey;
-        if(configMap.containsKey(key)){
-            String out = configMap.get(key).toString();
-            File file = Paths.get(out).toFile();
-
-            if(!file.isDirectory()){
-                if(file.mkdirs()) {
-                    logInfo(Logger, "sync destination folder created!");
-                }else{
-                    logError(Logger, "sync destination folder could not be created!");
-                }
-            }
-            return out;
-        }else{
-            return this.getLogFolder();
-        }
+        //no default
+        String key = backupKeys.syncDestination.defaultKey;
+        return loadGetter(key);
     }
 
     public String getBackupSource(){
-        String key = this.backupSourceDefaultKey;
-        if(configMap.containsKey(key)){
-            String out = configMap.get(key).toString();
-            File file = Paths.get(out).toFile();
-
-            if(!file.isDirectory()){
-                if(file.mkdirs()) {
-                    logInfo(Logger, "backup source folder created!");
-                }else{
-                    logError(Logger, "backup source folder could not be created!");
-                }
-            }
-            return out;
-        }else{
-            return this.getLogFolder();
-        }
+        //uses the syncSource as default
+        String key = backupKeys.backupSource.defaultKey;
+        return loadGetter(key,this.getSyncSource());
     }
 
     public String getBackupDestination(){
-        String key = this.backupDestinationDefaultKey;
-        if(configMap.containsKey(key)){
-            String out = configMap.get(key).toString();
-            File file = Paths.get(out).toFile();
-
-            if(!file.isDirectory()){
-                if(file.mkdirs()) {
-                    logInfo(Logger, "backup destination folder created!");
-                }else{
-                    logError(Logger, "backup destination folder could not be created!");
-                }
-            }
-            return out;
-        }else{
-            return this.getLogFolder();
-        }
+        //no default
+        String key = backupKeys.backupDestination.defaultKey;
+        return loadGetter(key);
     }
 
     public String getBackupName(){
-        String key = this.backupNameDefaultKey;
-        if(configMap.containsKey(key)){
-            return configMap.get(key).toString();
-        }else{
-            return null;
-        }
+        //uses global backupName as default
+        String key = backupKeys.backupName.defaultKey;
+        return loadGetter(key,Global.getBackupName());
     }
 
     public String getStartCommand(){
-        String key = this.startCommandsDefaultKey;
-        if(configMap.containsKey(key)){
-            return configMap.get(key).toString();
-        }else{
-            return null;
-        }
+        //no default
+        String key = backupKeys.startCommand.defaultKey;
+        return loadGetter(key);
     }
 
     public String getFinishCommand(){
-        String key = this.finishCommandsDefaultKey;
-        if(configMap.containsKey(key)){
-            return configMap.get(key).toString();
-        }else{
-            return null;
-        }
+        //no default
+        String key = backupKeys.finishCommand.defaultKey;
+        return loadGetter(key);
     }
 
     public String getPterodactylAPIkey(){
-        String key = coreConfig.getInstance().keyDefaultAPIkey;
-        if(configMap.containsKey(key)){
-            return configMap.get(key).toString();
-        }else{
-            return coreConfig.getPterodactylAPIkey();
-        }
+        //no default
+        //todo handle coreConfig overrides
+        return Core.getPterodactylAPIkey();
     }
 
     public String getPterodactylServerUUID(){
-        String key = coreConfig.getInstance().keyDefaultSeverUUID;
-        if(configMap.containsKey(key)){
-            return configMap.get(key).toString();
-        }else{
-            return coreConfig.getPterodactylServerUUID();
-        }
+        //no default
+        //todo handle coreConfig overrides
+        return Core.getPterodactylServerUUID();
     }
 
     public String getPterodactylPanelURL(){
-        String key = coreConfig.getInstance().keyDefaultPanelURL;
-        if(configMap.containsKey(key)){
+        //no default
+        //todo handle coreConfig overrides
+        return Core.getPterodactylPanelURL();
+    }
+
+    private String loadGetter(String key,String defaultOption){
+        //no default
+        return configMap.getOrDefault(key,defaultOption).toString();
+    }
+    private String loadGetter(String key){
+        if(configMap.containsKey(key))
             return configMap.get(key).toString();
-        }else{
-            return coreConfig.getPterodactylPanelURL();
-        }
+        return null;
     }
 }

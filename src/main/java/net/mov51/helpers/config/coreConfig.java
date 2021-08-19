@@ -23,22 +23,29 @@ public class coreConfig {
     private static final Path userCoreConfigPath = Paths.get("config" + File.separator + "coreConfig.yml");
     private static final String internalCoreConfigPath = "/defaultBackupConfig.yml";
 
-    protected final String keyDefaultAPIkey = "key";
-    protected final String keyDefaultSeverUUID = "serverUUID";
-    protected final String keyDefaultPanelURL = "panelURL";
-
-    private Map<String, Object> defaultConfigMap;
+    private Map<String, Object> configMap;
 
     //create Singleton, there should only ever be one instance of the core config file for the duration of the program run
     //this class will also handle the initialization of the core config file
 
     private static final coreConfig INSTANCE = new coreConfig();
 
+    private enum coreKeys {
+        APIkey ("APIkey"),
+        serverUUID ("serverUUID"),
+        panelURL ("PanelURL");
+
+        public final String defaultKey;
+
+        coreKeys(String defaultKey) {
+            this.defaultKey = defaultKey;
+        }
+    }
+
     private coreConfig() {
 
-
         if(userCoreConfigPath.toFile().exists()) {
-            defaultConfigMap = getMap(userCoreConfigPath);
+            configMap = getMap(userCoreConfigPath);
         }
         else
         {
@@ -68,22 +75,29 @@ public class coreConfig {
 
     }
 
-
-
     public static coreConfig getInstance() {
         return INSTANCE;
     }
 
-    public static String getPterodactylAPIkey(){
-        return INSTANCE.defaultConfigMap.get(INSTANCE.keyDefaultAPIkey).toString();
+    public String getPterodactylAPIkey(){
+        String key = coreKeys.APIkey.defaultKey;
+        return loadGetter(key);
     }
 
-    public static String getPterodactylPanelURL(){
-        return INSTANCE.defaultConfigMap.get(INSTANCE.keyDefaultPanelURL).toString();
+    public String getPterodactylPanelURL(){
+        String key = coreKeys.panelURL.defaultKey;
+        return loadGetter(key);
     }
 
-    public static String getPterodactylServerUUID(){
-        return INSTANCE.defaultConfigMap.get(INSTANCE.keyDefaultSeverUUID).toString();
+    public String getPterodactylServerUUID(){
+        String key = coreKeys.serverUUID.defaultKey;
+        return loadGetter(key);
+    }
+
+    private String loadGetter(String key){
+        if(configMap.containsKey(key))
+            return configMap.get(key).toString();
+        return null;
     }
 
 }
