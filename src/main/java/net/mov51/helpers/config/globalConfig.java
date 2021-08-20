@@ -12,6 +12,7 @@ import java.util.Map;
 
 import static jdk.jfr.internal.SecuritySupport.getResourceAsStream;
 import static net.mov51.helpers.config.yamlHelper.getMap;
+import static net.mov51.helpers.fileHelper.copyFromStream;
 import static net.mov51.helpers.fileHelper.createDirs;
 import static net.mov51.helpers.logHelper.*;
 import static net.mov51.helpers.logHelper.logFatalExitE;
@@ -28,23 +29,23 @@ public class globalConfig {
 
     private enum globalKeys {
         //logging
-        logFolder ("logFolder"),
-        logName ("logName"),
+        logFolder ("logFolder",true),
+        logName ("logName",true),
 
         //sync Logging
-        syncLogFolder ("syncLogFolder"),
-        syncLogName ("syncLogName"),
+        syncLogFolder ("syncLogFolder",false),
+        syncLogName ("syncLogName",false),
 
         //backup logging
-        backupLogFolder ("backupLogFolder"),
-        backupLogName ("backupLogName"),
+        backupLogFolder ("backupLogFolder",false),
+        backupLogName ("backupLogName",false),
 
         //backup settings
-        backupName ("backupName");
+        backupName ("backupName",true);
 
         public final String defaultKey;
 
-        globalKeys(String defaultKey) {
+        globalKeys(String defaultKey,boolean required) {
             this.defaultKey = defaultKey;
         }
     }
@@ -59,28 +60,16 @@ public class globalConfig {
         }
         else
         {
-            //creating default core config file
-            logError(Logger,"No Core Global Configuration exists. Creating default Core Config file file.");
-            try {
+        //creating default core config file
+        logError(Logger,"No Core Global Configuration exists. Creating default Core Config file.");
+            if(createDirs(userGlobalConfigPath)){
+                logInfo(Logger,"Verifying default configuration directory for Global Configuration file");
 
-                if(createDirs(userGlobalConfigPath)){
-                    logInfo(Logger,"Verifying default configuration directory for Global Configuration file");
-                }else{
-                    logError(Logger,"Failed to create default configuration directory for Global Configuration file!");
+                if (copyFromStream(internalGlobalConfigPath,userGlobalConfigPath)) {
+                    logInfo(Logger," Global Configuration file was created :D");
+                    logFatalExit(Logger,"Please update it with your values!");
+                    //todo link wiki
                 }
-
-                InputStream defaultConfig = getResourceAsStream(internalGlobalConfigPath);
-
-                if (defaultConfig != null) {
-                    Files.copy(defaultConfig, userGlobalConfigPath);
-                    defaultConfig.close();
-                }else {
-                    logFatalExit(Logger, "Could not create the Global Configuration file!");
-                }              logInfo(Logger," Global Configuration file was created :D");
-                logFatalExit(Logger,"Please update it with your values!");
-            }catch (IOException e) {
-                //todo use Initialization failsafe
-                logFatalExitE(Logger,e, "Could not create the Global Configuration file!");
             }
         }
 
@@ -118,38 +107,34 @@ public class globalConfig {
 
     public String getBackupLogFolder(){
         //Defaults to logFolder
-        String key = globalKeys.backupLogFolder.defaultKey;
-        return loadGetter(key,getLogFolder());
+        return loadGetter(globalKeys.backupLogFolder,getLogFolder());
     }
     public String getSyncLogFolder(){
         //defaults to logFolder
-        String key = globalKeys.syncLogFolder.defaultKey;
-        return loadGetter(key,getLogFolder());
+        return loadGetter(globalKeys.syncLogFolder,getLogFolder());
     }
 
     public String getSyncLogName(){
-        String key = globalKeys.syncLogName.defaultKey;
-        return loadGetter(key);
+        return loadGetter(globalKeys.syncLogName);
     }
 
     public String getBackupLogName(){
-        String key = globalKeys.backupLogName.defaultKey;
-        return loadGetter(key);
+        return loadGetter(globalKeys.backupLogName);
     }
     //--BACKUPS--
 
     public String getBackupName(){
-        String key = globalKeys.backupName.defaultKey;
-        return loadGetter(key);
+        return loadGetter(globalKeys.backupName);
     }
 
-    private String loadGetter(String key,String defaultOption){
+    private String loadGetter(globalKeys key,String defaultOption){
         //no default
-        return configMap.getOrDefault(key,defaultOption).toString();
+        return configMap.getOrDefault(key.defaultKey,defaultOption).toString();
     }
-    private String loadGetter(String key){
-        if(configMap.containsKey(key))
-            return configMap.get(key).toString();
+    private String loadGetter(globalKeys key){
+        if(configMap.containsKey(key.defaultKey))
+            return configMap.get(key.defaultKey).toString();
+        logFatal(Logger,"Could not load key " + key + " from globalConfig!");
         return "";
     }
 

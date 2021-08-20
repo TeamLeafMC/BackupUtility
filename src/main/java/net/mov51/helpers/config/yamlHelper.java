@@ -18,29 +18,6 @@ public class yamlHelper {
 
     private static final org.apache.logging.log4j.Logger Logger = LogManager.getLogger("Config_logger");
 
-    public static void loadKeys(){
-        allKeys.put("logNameDefaultKey","logName");
-        allKeys.put("logFolderDefaultKey","logFolder");
-        allKeys.put("backupLogFolderDefaultKey","backupLogFolder");
-        allKeys.put("syncLogFolderFolderDefaultKey","syncLogFolder");
-        allKeys.put("syncLogNameDefaultKey","syncLogName");
-        allKeys.put("backupLogNameDefaultKey","backupLogName");
-
-        allKeys.put("syncSourceDefaultKey","syncSource");
-        allKeys.put("syncDestinationDefaultKey","syncDestination");
-
-        allKeys.put("backupSourceDefaultKey","backupSource");
-        allKeys.put("backupDestinationDefaultKey","backupDestination");
-        allKeys.put("backupNameDefaultKey","backupName");
-
-        allKeys.put("startCommandsDefaultKey","startCommand");
-        allKeys.put("finishCommandsDefaultKey","finishCommand");
-
-        allKeys.put("ApiKeyDefaultKey","APIkey");
-        allKeys.put("SeverUuidDefaultKey","serverUUID");
-        allKeys.put("PanelUrlDefaultKey","panelURL");
-    }
-
 
     //loads config file into map. Can only be accessed via getters
     public static Map<String,Object> getMap(String Config){

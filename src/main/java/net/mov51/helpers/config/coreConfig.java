@@ -1,20 +1,16 @@
 package net.mov51.helpers.config;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 
-import static jdk.jfr.internal.SecuritySupport.getResourceAsStream;
 import static net.mov51.helpers.config.yamlHelper.getMap;
+import static net.mov51.helpers.fileHelper.copyFromStream;
 import static net.mov51.helpers.fileHelper.createDirs;
 import static net.mov51.helpers.logHelper.*;
-import static net.mov51.helpers.logHelper.logFatalExitE;
 
 public class coreConfig {
 
@@ -31,13 +27,13 @@ public class coreConfig {
     private static final coreConfig INSTANCE = new coreConfig();
 
     private enum coreKeys {
-        APIkey ("APIkey"),
-        serverUUID ("serverUUID"),
-        panelURL ("panelURL");
+        APIkey ("APIkey",true),
+        serverUUID ("serverUUID",true),
+        panelURL ("panelURL",true);
 
         public final String defaultKey;
 
-        coreKeys(String defaultKey) {
+        coreKeys(String defaultKey,boolean required) {
             this.defaultKey = defaultKey;
         }
     }
@@ -46,30 +42,15 @@ public class coreConfig {
 
         if(userCoreConfigPath.toFile().exists()) {
             configMap = getMap(userCoreConfigPath);
-        }
-        else
-        {
+        }else{
             //creating default core config file
             logError(Logger,"No Core Config file exists. Creating default Core Config file file.");
-            try {
-
-                if(createDirs(userCoreConfigPath)){
-                    logInfo(Logger,"Verifying default configuration directory for Core Config file");
-                }else{
-                    logError(Logger,"Failed to create default configuration directory for Core Config file!");
-                }
-
-                InputStream defaultConfig = getResourceAsStream(internalCoreConfigPath);
-
-                if (defaultConfig != null) {
-                    Files.copy(defaultConfig, userCoreConfigPath);
-                }else {
-                    logFatalExit(Logger, "Could not create the Core Config file!");
-                }              logInfo(Logger," Core Config file was created :D");
+            if(createDirs(userCoreConfigPath)){
+                logInfo(Logger,"Verifying default configuration directory for Core Config file");
+            }
+            if (copyFromStream(internalCoreConfigPath,userCoreConfigPath)) {
+                logInfo(Logger," Core Config file was created :D");
                 logFatalExit(Logger,"Please update it with your values!");
-            }catch (IOException e) {
-                //todo use initialization failsafe
-                logFatalExitE(Logger,e, "Could not create the Core Config file!");
             }
         }
 
@@ -80,28 +61,22 @@ public class coreConfig {
     }
 
     public String getPterodactylAPIkey(){
-        String key = coreKeys.APIkey.defaultKey;
-        return loadGetter(key);
+        return loadGetter(coreKeys.APIkey);
     }
 
     public String getPterodactylPanelURL(){
-        String key = coreKeys.panelURL.defaultKey;
-        return loadGetter(key);
+        return loadGetter(coreKeys.panelURL);
     }
 
     public String getPterodactylServerUUID(){
-        String key = coreKeys.serverUUID.defaultKey;
-        return loadGetter(key);
+        return loadGetter(coreKeys.serverUUID);
     }
 
-    private String loadGetter(String key){
-        if(configMap.containsKey(key)){
-            return configMap.get(key).toString();
-        }else{
-            logFatal(Logger,"Could not lod key " + key + " from coreConfig!");
-            return null;
-        }
-
+    private String loadGetter(coreKeys key){
+        if(configMap.containsKey(key.defaultKey))
+            return configMap.get(key.defaultKey).toString();
+        logFatal(Logger,"Could not load key " + key + " from coreConfig!");
+        return "";
     }
 
 }

@@ -20,8 +20,8 @@ public class Main {
     private static final org.apache.logging.log4j.Logger Logger = LogManager.getLogger("mainLogger");
 
     //initialize static configs
-    public static final globalConfig GlobalConfig = globalConfig.getInstance();
     public static final coreConfig CoreConfig = coreConfig.getInstance();
+    public static final globalConfig GlobalConfig = globalConfig.getInstance();
 
     public static void main(String[] args){
 

@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import java.util.Map;
 
 import static net.mov51.helpers.config.yamlHelper.getMap;
+import static net.mov51.helpers.logHelper.logFatal;
 
 public class backupConfig {
 
@@ -12,33 +13,33 @@ public class backupConfig {
 
     private enum backupKeys {
         //logging
-        logFolder ("logFolder"),
-        logName ("logName"),
+        logFolder ("logFolder",false),
+        logName ("logName",true),
 
         //sync Logging
-        syncLogFolder ("syncLogFolder"),
-        syncLogName ("syncLogName"),
+        syncLogFolder ("syncLogFolder",false),
+        syncLogName ("syncLogName",false),
 
         //backup logging
-        backupLogFolder ("backupLogFolder"),
-        backupLogName ("backupLogName"),
+        backupLogFolder ("backupLogFolder",false),
+        backupLogName ("backupLogName",false),
 
         //sync settings
-        syncSource ("syncSource"),
-        syncDestination ("syncDestination"),
+        syncSource ("syncSource",true),
+        syncDestination ("syncDestination",true),
 
         //backup settings
-        backupSource ("backupSource"),
-        backupDestination ("backupDestination"),
-        backupName ("backupName"),
+        backupSource ("backupSource",false),
+        backupDestination ("backupDestination",true),
+        backupName ("backupName",true),
 
         //commands
-        startCommand ("startCommand"),
-        finishCommand ("finishCommand");
+        startCommand ("startCommand",true),
+        finishCommand ("finishCommand",true);
 
         public final String defaultKey;
 
-        backupKeys(String defaultKey) {
+        backupKeys(String defaultKey,boolean required) {
             this.defaultKey = defaultKey;
         }
     }
@@ -54,79 +55,66 @@ public class backupConfig {
 
     public String getLogFolder(){
         //uses global logFolder as default
-        String key = backupKeys.logFolder.defaultKey;
-        return loadGetter(key,Global.getLogFolder());
+        return loadGetter(backupKeys.logFolder,Global.getLogFolder());
     }
 
     public String getLogName(){
         //uses global logFolder as default
-        String key = backupKeys.logName.defaultKey;
-        return loadGetter(key,Global.getLogName());
+        return loadGetter(backupKeys.logName,Global.getLogName());
     }
 
     public String getSyncLogFolder(){
         //uses global syncLogFolder as default
-        String key = backupKeys.syncLogFolder.defaultKey;
-        return loadGetter(key,Global.getSyncLogFolder());
+        return loadGetter(backupKeys.syncLogFolder,Global.getSyncLogFolder());
     }
 
     public String getBackupLogFolder(){
         //uses global backupLogFolder as default
-        String key = backupKeys.backupLogFolder.defaultKey;
-        return loadGetter(key,Global.getBackupLogFolder());
+        return loadGetter(backupKeys.backupLogFolder,Global.getBackupLogFolder());
     }
 
     public String getSyncLogName(){
         //uses global syncLogName as default
-        String key = backupKeys.syncLogName.defaultKey;
-        return loadGetter(key,Global.getSyncLogName());
+        return loadGetter(backupKeys.syncLogName,Global.getSyncLogName());
     }
 
     public String getBackupLogName(){
         //uses global backupLogName as default
-        String key = backupKeys.backupLogName.defaultKey;
-        return loadGetter(key,Global.getBackupLogName());
+        return loadGetter(backupKeys.backupLogName,Global.getBackupLogName());
     }
 
     public String getSyncSource(){
-        String key = backupKeys.syncSource.defaultKey;
-        return loadGetter(key);
+        return loadGetter(backupKeys.syncSource);
     }
 
     public String getSyncDestination(){
         //no default
-        String key = backupKeys.syncDestination.defaultKey;
-        return loadGetter(key);
+        return loadGetter(backupKeys.syncDestination);
     }
 
     public String getBackupSource(){
         //uses the syncSource as default
-        String key = backupKeys.backupSource.defaultKey;
-        return loadGetter(key,this.getSyncSource());
+        return loadGetter(backupKeys.backupSource,this.getSyncDestination());
     }
 
     public String getBackupDestination(){
         //no default
-        String key = backupKeys.backupDestination.defaultKey;
-        return loadGetter(key);
+        return loadGetter(backupKeys.backupDestination);
     }
 
     public String getBackupName(){
         //uses global backupName as default
-        String key = backupKeys.backupName.defaultKey;
-        return loadGetter(key,Global.getBackupName());
+        return loadGetter(backupKeys.backupName,Global.getBackupName());
     }
 
     public String getStartCommand(){
         //no default
-        String key = backupKeys.startCommand.defaultKey;
-        return loadGetter(key);
+        return loadGetter(backupKeys.startCommand);
     }
 
     public String getFinishCommand(){
         //no default
-        String key = backupKeys.finishCommand.defaultKey;
-        return loadGetter(key);
+        return loadGetter(backupKeys.finishCommand);
     }
 
     public String getPterodactylAPIkey(){
@@ -147,13 +135,14 @@ public class backupConfig {
         return Core.getPterodactylPanelURL();
     }
 
-    private String loadGetter(String key,String defaultOption){
+    private String loadGetter(backupKeys key,String defaultOption){
         //no default
-        return configMap.getOrDefault(key,defaultOption).toString();
+        return configMap.getOrDefault(key.defaultKey,defaultOption).toString();
     }
-    private String loadGetter(String key){
-        if(configMap.containsKey(key))
-            return configMap.get(key).toString();
+    private String loadGetter(backupKeys key){
+        if(configMap.containsKey(key.defaultKey))
+            return configMap.get(key.defaultKey).toString();
+        logFatal(Logger,"Could not load key " + key + " from backupConfig!");
         return "";
     }
 }

@@ -1,5 +1,6 @@
 #---general logging---
-logFolder: 'logs/'
+#--optional--
+#logFolder: 'logs/'
 logName: 'log'
 
 #---Sync Logging---
