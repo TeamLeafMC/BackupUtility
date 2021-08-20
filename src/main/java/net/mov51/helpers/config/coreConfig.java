@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 
 import static net.mov51.helpers.config.yamlHelper.getMap;
+import static net.mov51.helpers.config.yamlVerifier.coreVerify;
 import static net.mov51.helpers.fileHelper.copyFromStream;
 import static net.mov51.helpers.fileHelper.createDirs;
 import static net.mov51.helpers.logHelper.*;
@@ -24,24 +25,27 @@ public class coreConfig {
     //create Singleton, there should only ever be one instance of the core config file for the duration of the program run
     //this class will also handle the initialization of the core config file
 
-    private static final coreConfig INSTANCE = new coreConfig();
+    private static coreConfig INSTANCE = null;
 
-    private enum coreKeys {
+    public enum Keys {
         APIkey ("APIkey",true),
         serverUUID ("serverUUID",true),
         panelURL ("panelURL",true);
 
         public final String defaultKey;
+        public final boolean required;
 
-        coreKeys(String defaultKey,boolean required) {
+        Keys(String defaultKey, boolean required) {
             this.defaultKey = defaultKey;
+            this.required = required;
         }
     }
 
     private coreConfig() {
-
         if(userCoreConfigPath.toFile().exists()) {
+            logInfo(Logger,"I'm here!");
             configMap = getMap(userCoreConfigPath);
+            coreVerify(configMap);
         }else{
             //creating default core config file
             logError(Logger,"No Core Config file exists. Creating default Core Config file file.");
@@ -53,28 +57,29 @@ public class coreConfig {
                 logFatalExit(Logger,"Please update it with your values!");
             }
         }
-
     }
 
     public static coreConfig getInstance() {
+        if (INSTANCE == null)
+            INSTANCE = new coreConfig();
         return INSTANCE;
     }
 
     public String getPterodactylAPIkey(){
-        return loadGetter(coreKeys.APIkey);
+        return loadGetter(Keys.APIkey);
     }
 
     public String getPterodactylPanelURL(){
-        return loadGetter(coreKeys.panelURL);
+        return loadGetter(Keys.panelURL);
     }
 
     public String getPterodactylServerUUID(){
-        return loadGetter(coreKeys.serverUUID);
+        return loadGetter(Keys.serverUUID);
     }
 
-    private String loadGetter(coreKeys key){
-        if(configMap.containsKey(key.defaultKey))
-            return configMap.get(key.defaultKey).toString();
+    private String loadGetter(Keys key){
+        if(INSTANCE.configMap.containsKey(key.defaultKey))
+            return INSTANCE.configMap.get(key.defaultKey).toString();
         logFatal(Logger,"Could not load key " + key + " from coreConfig!");
         return "";
     }

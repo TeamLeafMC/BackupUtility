@@ -3,19 +3,14 @@ package net.mov51.helpers.config;
 import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 
-import static jdk.jfr.internal.SecuritySupport.getResourceAsStream;
 import static net.mov51.helpers.config.yamlHelper.getMap;
 import static net.mov51.helpers.fileHelper.copyFromStream;
 import static net.mov51.helpers.fileHelper.createDirs;
 import static net.mov51.helpers.logHelper.*;
-import static net.mov51.helpers.logHelper.logFatalExitE;
 
 public class globalConfig {
 
@@ -27,7 +22,7 @@ public class globalConfig {
     private Map<String, Object> configMap;
     private static final globalConfig INSTANCE = new globalConfig();
 
-    private enum globalKeys {
+    public enum Keys {
         //logging
         logFolder ("logFolder",true),
         logName ("logName",true),
@@ -44,9 +39,11 @@ public class globalConfig {
         backupName ("backupName",true);
 
         public final String defaultKey;
+        public final boolean required;
 
-        globalKeys(String defaultKey,boolean required) {
+        Keys(String defaultKey, boolean required) {
             this.defaultKey = defaultKey;
+            this.required = required;
         }
     }
 
@@ -78,7 +75,7 @@ public class globalConfig {
     //--LOGGING--
 
     public String getLogName(){
-        String key = globalKeys.logName.defaultKey;
+        String key = Keys.logName.defaultKey;
         if(INSTANCE.configMap.containsKey(key)){
             return INSTANCE.configMap.get(key).toString();
         }else{
@@ -89,7 +86,7 @@ public class globalConfig {
 
     public String getLogFolder(){
         //todo I'm not sure if logging while the log folder is being made makes any sense.
-        String key = globalKeys.logFolder.defaultKey;
+        String key = Keys.logFolder.defaultKey;
         if(INSTANCE.configMap.containsKey(key)){
             File file = new File(INSTANCE.configMap.get(key).toString());
             if(!file.isDirectory()){
@@ -107,31 +104,31 @@ public class globalConfig {
 
     public String getBackupLogFolder(){
         //Defaults to logFolder
-        return loadGetter(globalKeys.backupLogFolder,getLogFolder());
+        return loadGetter(Keys.backupLogFolder,getLogFolder());
     }
     public String getSyncLogFolder(){
         //defaults to logFolder
-        return loadGetter(globalKeys.syncLogFolder,getLogFolder());
+        return loadGetter(Keys.syncLogFolder,getLogFolder());
     }
 
     public String getSyncLogName(){
-        return loadGetter(globalKeys.syncLogName);
+        return loadGetter(Keys.syncLogName);
     }
 
     public String getBackupLogName(){
-        return loadGetter(globalKeys.backupLogName);
+        return loadGetter(Keys.backupLogName);
     }
     //--BACKUPS--
 
     public String getBackupName(){
-        return loadGetter(globalKeys.backupName);
+        return loadGetter(Keys.backupName);
     }
 
-    private String loadGetter(globalKeys key,String defaultOption){
+    private String loadGetter(Keys key, String defaultOption){
         //no default
         return configMap.getOrDefault(key.defaultKey,defaultOption).toString();
     }
-    private String loadGetter(globalKeys key){
+    private String loadGetter(Keys key){
         if(configMap.containsKey(key.defaultKey))
             return configMap.get(key.defaultKey).toString();
         logFatal(Logger,"Could not load key " + key + " from globalConfig!");

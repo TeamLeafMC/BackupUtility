@@ -19,7 +19,7 @@ public class yamlHelper {
     private static final org.apache.logging.log4j.Logger Logger = LogManager.getLogger("Config_logger");
 
 
-    //loads config file into map. Can only be accessed via getters
+    //loads config file into map
     public static Map<String,Object> getMap(String Config){
         InputStream inputStream;
         try {

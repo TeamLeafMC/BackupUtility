@@ -5,13 +5,13 @@ import org.apache.logging.log4j.LogManager;
 import java.util.Map;
 
 import static net.mov51.helpers.config.yamlHelper.getMap;
-import static net.mov51.helpers.logHelper.logFatal;
+import static net.mov51.helpers.logHelper.*;
 
 public class backupConfig {
 
     private static final org.apache.logging.log4j.Logger Logger = LogManager.getLogger("backupConfigBuilder");
 
-    private enum backupKeys {
+    public enum Keys {
         //logging
         logFolder ("logFolder",false),
         logName ("logName",true),
@@ -38,9 +38,12 @@ public class backupConfig {
         finishCommand ("finishCommand",true);
 
         public final String defaultKey;
+        public final boolean required;
 
-        backupKeys(String defaultKey,boolean required) {
+        Keys(String defaultKey, boolean required) {
             this.defaultKey = defaultKey;
+            this.required = required;
+
         }
     }
 
@@ -51,70 +54,71 @@ public class backupConfig {
 
     public backupConfig(String configPath){
         this.configMap = getMap(configPath);
+
     }
 
     public String getLogFolder(){
         //uses global logFolder as default
-        return loadGetter(backupKeys.logFolder,Global.getLogFolder());
+        return loadGetter(Keys.logFolder,Global.getLogFolder());
     }
 
     public String getLogName(){
         //uses global logFolder as default
-        return loadGetter(backupKeys.logName,Global.getLogName());
+        return loadGetter(Keys.logName,Global.getLogName());
     }
 
     public String getSyncLogFolder(){
         //uses global syncLogFolder as default
-        return loadGetter(backupKeys.syncLogFolder,Global.getSyncLogFolder());
+        return loadGetter(Keys.syncLogFolder,Global.getSyncLogFolder());
     }
 
     public String getBackupLogFolder(){
         //uses global backupLogFolder as default
-        return loadGetter(backupKeys.backupLogFolder,Global.getBackupLogFolder());
+        return loadGetter(Keys.backupLogFolder,Global.getBackupLogFolder());
     }
 
     public String getSyncLogName(){
         //uses global syncLogName as default
-        return loadGetter(backupKeys.syncLogName,Global.getSyncLogName());
+        return loadGetter(Keys.syncLogName,Global.getSyncLogName());
     }
 
     public String getBackupLogName(){
         //uses global backupLogName as default
-        return loadGetter(backupKeys.backupLogName,Global.getBackupLogName());
+        return loadGetter(Keys.backupLogName,Global.getBackupLogName());
     }
 
     public String getSyncSource(){
-        return loadGetter(backupKeys.syncSource);
+        return loadGetter(Keys.syncSource);
     }
 
     public String getSyncDestination(){
         //no default
-        return loadGetter(backupKeys.syncDestination);
+        return loadGetter(Keys.syncDestination);
     }
 
     public String getBackupSource(){
         //uses the syncSource as default
-        return loadGetter(backupKeys.backupSource,this.getSyncDestination());
+        return loadGetter(Keys.backupSource,this.getSyncDestination());
     }
 
     public String getBackupDestination(){
         //no default
-        return loadGetter(backupKeys.backupDestination);
+        return loadGetter(Keys.backupDestination);
     }
 
     public String getBackupName(){
         //uses global backupName as default
-        return loadGetter(backupKeys.backupName,Global.getBackupName());
+        return loadGetter(Keys.backupName,Global.getBackupName());
     }
 
     public String getStartCommand(){
         //no default
-        return loadGetter(backupKeys.startCommand);
+        return loadGetter(Keys.startCommand);
     }
 
     public String getFinishCommand(){
         //no default
-        return loadGetter(backupKeys.finishCommand);
+        return loadGetter(Keys.finishCommand);
     }
 
     public String getPterodactylAPIkey(){
@@ -135,11 +139,11 @@ public class backupConfig {
         return Core.getPterodactylPanelURL();
     }
 
-    private String loadGetter(backupKeys key,String defaultOption){
+    private String loadGetter(Keys key, String defaultOption){
         //no default
         return configMap.getOrDefault(key.defaultKey,defaultOption).toString();
     }
-    private String loadGetter(backupKeys key){
+    private String loadGetter(Keys key){
         if(configMap.containsKey(key.defaultKey))
             return configMap.get(key.defaultKey).toString();
         logFatal(Logger,"Could not load key " + key + " from backupConfig!");

@@ -20,10 +20,16 @@ public class Main {
     private static final org.apache.logging.log4j.Logger Logger = LogManager.getLogger("mainLogger");
 
     //initialize static configs
-    public static final coreConfig CoreConfig = coreConfig.getInstance();
-    public static final globalConfig GlobalConfig = globalConfig.getInstance();
+    public static coreConfig CoreConfig = null;
+    public static globalConfig GlobalConfig = null;
 
     public static void main(String[] args){
+        //set logger configurations
+        //todo fully configure log4j
+        Configurator.setRootLevel(Level.INFO);
+
+        CoreConfig = coreConfig.getInstance();
+        GlobalConfig = globalConfig.getInstance();
 
         PrintStream out = null;
         try {
@@ -33,10 +39,6 @@ public class Main {
             e.printStackTrace();
         }
         System.setOut(out);
-
-        //set logger configurations
-        //todo fully configure log4j
-        Configurator.setRootLevel(Level.INFO);
 
 
         //start backup cycle
