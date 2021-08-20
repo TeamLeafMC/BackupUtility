@@ -5,6 +5,8 @@ import org.apache.logging.log4j.LogManager;
 import java.util.Map;
 
 import static net.mov51.helpers.config.yamlHelper.getMap;
+import static net.mov51.helpers.config.yamlVerifier.backupVerify;
+import static net.mov51.helpers.config.yamlVerifier.dataType;
 import static net.mov51.helpers.logHelper.*;
 
 public class backupConfig {
@@ -13,37 +15,38 @@ public class backupConfig {
 
     public enum Keys {
         //logging
-        logFolder ("logFolder",false),
-        logName ("logName",true),
+        logFolder ("logFolder",false, dataType.FileName),
+        logName ("logName",true,dataType.FileName),
 
         //sync Logging
-        syncLogFolder ("syncLogFolder",false),
-        syncLogName ("syncLogName",false),
+        syncLogFolder ("syncLogFolder",false,dataType.Folder),
+        syncLogName ("syncLogName",false,dataType.FileName),
 
         //backup logging
-        backupLogFolder ("backupLogFolder",false),
-        backupLogName ("backupLogName",false),
+        backupLogFolder ("backupLogFolder",false,dataType.Folder),
+        backupLogName ("backupLogName",false,dataType.FileName),
 
         //sync settings
-        syncSource ("syncSource",true),
-        syncDestination ("syncDestination",true),
+        syncSource ("syncSource",true,dataType.Folder),
+        syncDestination ("syncDestination",true,dataType.Folder),
 
         //backup settings
-        backupSource ("backupSource",false),
-        backupDestination ("backupDestination",true),
-        backupName ("backupName",true),
+        backupSource ("backupSource",false,dataType.Folder),
+        backupDestination ("backupDestination",true,dataType.Folder),
+        backupName ("backupName",true,dataType.FileName),
 
         //commands
-        startCommand ("startCommand",true),
-        finishCommand ("finishCommand",true);
+        startCommand ("startCommand",true,dataType.Command),
+        finishCommand ("finishCommand",true,dataType.Command);
 
         public final String defaultKey;
         public final boolean required;
+        public final dataType DataType;
 
-        Keys(String defaultKey, boolean required) {
+        Keys(String defaultKey, boolean required, dataType DataType) {
             this.defaultKey = defaultKey;
             this.required = required;
-
+            this.DataType = DataType;
         }
     }
 
@@ -54,7 +57,7 @@ public class backupConfig {
 
     public backupConfig(String configPath){
         this.configMap = getMap(configPath);
-
+        backupVerify(this.configMap);
     }
 
     public String getLogFolder(){
@@ -141,11 +144,11 @@ public class backupConfig {
 
     private String loadGetter(Keys key, String defaultOption){
         //no default
-        return configMap.getOrDefault(key.defaultKey,defaultOption).toString();
+        return this.configMap.getOrDefault(key.defaultKey,defaultOption).toString();
     }
     private String loadGetter(Keys key){
         if(configMap.containsKey(key.defaultKey))
-            return configMap.get(key.defaultKey).toString();
+            return this.configMap.get(key.defaultKey).toString();
         logFatal(Logger,"Could not load key " + key + " from backupConfig!");
         return "";
     }

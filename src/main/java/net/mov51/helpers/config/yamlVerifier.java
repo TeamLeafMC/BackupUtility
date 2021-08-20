@@ -11,6 +11,15 @@ public class yamlVerifier {
 
     private static final org.apache.logging.log4j.Logger Logger = LogManager.getLogger("YAML_Verifier");
 
+    public enum dataType {
+        Folder,
+        FileName,
+        Command,
+        ServerUUID,
+        APIkey,
+        URL
+    }
+
     public static boolean coreVerify(Map<String, Object> map){
         //todo verify the passed core config file
         // - contains all keys ☑

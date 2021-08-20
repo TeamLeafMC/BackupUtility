@@ -8,6 +8,8 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 import static net.mov51.helpers.config.yamlHelper.getMap;
+import static net.mov51.helpers.config.yamlVerifier.globalVerify;
+import static net.mov51.helpers.config.yamlVerifier.dataType;
 import static net.mov51.helpers.fileHelper.copyFromStream;
 import static net.mov51.helpers.fileHelper.createDirs;
 import static net.mov51.helpers.logHelper.*;
@@ -20,40 +22,45 @@ public class globalConfig {
     private static final String internalGlobalConfigPath = "/defaultGlobalConfig.yml";
 
     private Map<String, Object> configMap;
-    private static final globalConfig INSTANCE = new globalConfig();
+    private static globalConfig INSTANCE = null;
 
     public enum Keys {
         //logging
-        logFolder ("logFolder",true),
-        logName ("logName",true),
+        logFolder ("logFolder",true, dataType.Folder),
+        logName ("logName",true,dataType.FileName),
 
         //sync Logging
-        syncLogFolder ("syncLogFolder",false),
-        syncLogName ("syncLogName",false),
+        syncLogFolder ("syncLogFolder",false,dataType.Folder),
+        syncLogName ("syncLogName",false,dataType.Folder),
 
         //backup logging
-        backupLogFolder ("backupLogFolder",false),
-        backupLogName ("backupLogName",false),
+        backupLogFolder ("backupLogFolder",false,dataType.Folder),
+        backupLogName ("backupLogName",false,dataType.FileName),
 
         //backup settings
-        backupName ("backupName",true);
+        backupName ("backupName",true,dataType.FileName);
 
         public final String defaultKey;
         public final boolean required;
+        public final yamlVerifier.dataType DataType;
 
-        Keys(String defaultKey, boolean required) {
+        Keys(String defaultKey, boolean required, yamlVerifier.dataType DataType) {
             this.defaultKey = defaultKey;
             this.required = required;
+            this.DataType = DataType;
         }
     }
 
     public static globalConfig getInstance() {
+        if(INSTANCE == null)
+            INSTANCE = new globalConfig();
         return INSTANCE;
     }
 
     private globalConfig(){
         if(userGlobalConfigPath.toFile().exists()){
             configMap = getMap(userGlobalConfigPath);
+            globalVerify(configMap);
         }
         else
         {

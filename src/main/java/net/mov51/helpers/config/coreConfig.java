@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 
 import static net.mov51.helpers.config.yamlHelper.getMap;
 import static net.mov51.helpers.config.yamlVerifier.coreVerify;
+import static net.mov51.helpers.config.yamlVerifier.dataType;
 import static net.mov51.helpers.fileHelper.copyFromStream;
 import static net.mov51.helpers.fileHelper.createDirs;
 import static net.mov51.helpers.logHelper.*;
@@ -28,16 +29,18 @@ public class coreConfig {
     private static coreConfig INSTANCE = null;
 
     public enum Keys {
-        APIkey ("APIkey",true),
-        serverUUID ("serverUUID",true),
-        panelURL ("panelURL",true);
+        APIkey ("APIkey",true,dataType.APIkey),
+        serverUUID ("serverUUID",true,dataType.ServerUUID),
+        panelURL ("panelURL",true,dataType.URL);
 
         public final String defaultKey;
         public final boolean required;
+        public final yamlVerifier.dataType DataType;
 
-        Keys(String defaultKey, boolean required) {
+        Keys(String defaultKey, boolean required, yamlVerifier.dataType DataType) {
             this.defaultKey = defaultKey;
             this.required = required;
+            this.DataType = DataType;
         }
     }
 
